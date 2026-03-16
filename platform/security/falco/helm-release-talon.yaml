@@ -1,0 +1,89 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: falco-talon
+  namespace: falco-talon
+spec:
+  dependsOn:
+    - name: falcosidekick
+      namespace: falco-sidekick
+  interval: 10m0s
+  chart:
+    spec:
+      chart: falco-talon
+      sourceRef:
+        kind: HelmRepository
+        name: falcosecurity
+        namespace: flux-system
+  values:
+    config:
+      rules:
+        - name: reverse-shell-prod
+          match:
+            rule: Reverse Shell Connect
+            output_fields:
+              k8s.ns.name: prod
+          actions:
+            - name: log-critical
+              type: log
+              parameters:
+                message: "CRITICAL: Reverse shell detected in prod namespace"
+            - name: isolate-namespace
+              type: apply-network-policy
+              parameters:
+                namespace: prod
+                policyName: default-deny
+        - name: shadow-file-prod
+          match:
+            rule: Read Shadow File
+            output_fields:
+              k8s.ns.name: prod
+          actions:
+            - name: log-critical
+              type: log
+              parameters:
+                message: "CRITICAL: Shadow file accessed in prod namespace"
+        - name: network-tool-in-prod
+          match:
+            rule: Curl or Wget in Container
+            output_fields:
+              k8s.ns.name: prod
+          actions:
+            - name: log-warning
+              type: log
+              parameters:
+                message: "WARNING: Network tool detected in prod - manual review required"
+        - name: bash-exec-prod
+          match:
+            rule: Exec Shell Bash
+            output_fields:
+              k8s.ns.name: prod
+          actions:
+            - name: log-warning
+              type: log
+              parameters:
+                message: "WARNING: Bash executed in prod namespace"
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      fsGroup: 1000
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
+    rbac:
+      create: true
+    serviceAccount:
+      create: true
+    service:
+      port: 2803
+      type: ClusterIP

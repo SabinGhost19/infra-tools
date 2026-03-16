@@ -1,0 +1,62 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  name: grafana
+  namespace: grafana
+  labels:
+    # Acest label este folosit de GrafanaDatasource si GrafanaDashboard
+    # ca instanceSelector pentru a sti la ce instanta Grafana sa se aplice
+    dashboards: grafana
+spec:
+  config:
+    server:
+      root_url: "%(protocol)s://%(domain)s/"
+    auth:
+      disable_login_form: "false"
+    security:
+      admin_user: admin
+      admin_password: CHANGEME_GRAFANA_ADMIN
+    log:
+      mode: console
+      level: warn
+    feature_toggles:
+      enable: publicDashboards
+  service:
+    spec:
+      type: ClusterIP
+  # Resurse pentru pod-ul Grafana
+  deployment:
+    spec:
+      template:
+        metadata:
+          annotations:
+            container.apparmor.security.beta.kubernetes.io/grafana: unconfined
+            container.seccomp.security.alpha.kubernetes.io/grafana: unconfined
+        spec:
+          containers:
+            - name: grafana
+              env:
+                - name: GF_SERVER_ROOT_URL
+                  value: "%(protocol)s://%(domain)s/"
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  cpu: 500m
+                  memory: 1Gi
+              securityContext:
+                runAsNonRoot: false
+                runAsUser: 472
+                runAsGroup: 472
+                readOnlyRootFilesystem: false
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: []
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 472
+            runAsGroup: 472
+            fsGroup: 472
+            seccompProfile:
+              type: Unconfined

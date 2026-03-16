@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oauth2-proxy-values
+  namespace: oauth2-proxy
+data:
+  values.yaml: |
+    replicaCount: 1
+
+    extraEnv:
+      - name: OAUTH2_PROXY_CLIENT_ID
+        valueFrom:
+          secretKeyRef:
+            name: oauth2-proxy-creds
+            key: OAUTH2_PROXY_CLIENT_ID
+      - name: OAUTH2_PROXY_CLIENT_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: oauth2-proxy-creds
+            key: OAUTH2_PROXY_CLIENT_SECRET
+      - name: OAUTH2_PROXY_COOKIE_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: oauth2-proxy-creds
+            key: OAUTH2_PROXY_COOKIE_SECRET
+
+    extraArgs:
+      provider: keycloak-oidc
+      http-address: 0.0.0.0:4180
+      upstream: static://200
+      redirect-url: http://demo.licenta.ro/oauth2/callback
+      oidc-issuer-url: http://keycloak.platform-identity.svc.cluster.local/realms/ZeroTrust-Realm
+      email-domain: "*"
+      scope: openid profile email groups
+      allowed-group: SG_PlatformEngineers
+      cookie-secure: "false"
+      cookie-httponly: "true"
+      cookie-samesite: lax
+      set-xauthrequest: "true"
+      set-authorization-header: "true"
+      pass-access-token: "true"
+      pass-user-headers: "true"
+      reverse-proxy: "true"
+      skip-provider-button: "true"
+
+    service:
+      portNumber: 80

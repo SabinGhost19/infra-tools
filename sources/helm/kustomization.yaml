@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - bitnami-repository.yaml
+  - oauth2-proxy-repository.yaml
+  - istio-repository.yaml
+  - falcosecurity-repository.yaml
+  - grafana-repository.yaml
+  - hashicorp-repository.yaml
+  - external-secrets-repository.yaml
+  - tf-controller-repository.yaml
+  - metallb-repository.yaml
+  - ingress-nginx-repository.yaml

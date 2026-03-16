@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coraza-waf-rules
+  namespace: istio-gateway
+data:
+  coraza.conf: |
+    SecRuleEngine On
+    SecRequestBodyAccess On
+    SecResponseBodyAccess Off
+    SecDefaultAction "phase:2,deny,status:403,log"
+    Include /etc/coraza/owasp-crs/crs-setup.conf
+    Include /etc/coraza/owasp-crs/rules.conf
+  crs-setup.conf: |
+    SecRule REQUEST_HEADERS:User-Agent "(?:sqlmap|nikto|nmap|curl|wget)" "id:1000,phase:1,deny,status:403,log,msg:'OWASP CRS: Suspicious User-Agent'"
+  rules.conf: |
+    SecRule ARGS "(?:union.*select|/etc/shadow|/bin/bash|/bin/sh)" "id:1001,phase:2,deny,status:403,log,msg:'OWASP CRS: Common attack payload'"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: coraza-waf
+  namespace: istio-gateway
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          filterChain:
+            filter:
+              name: envoy.filters.network.http_connection_manager
+              subFilter:
+                name: envoy.filters.http.router
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: envoy.filters.http.wasm
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+            config:
+              name: coraza-waf
+              root_id: coraza_waf
+              vm_config:
+                runtime: envoy.wasm.runtime.v8
+                code:
+                  local:
+                    filename: /var/local/coraza/coraza.wasm
+              configuration:
+                "@type": type.googleapis.com/google.protobuf.StringValue
+                value: |
+                  {
+                    "directives_map": {
+                      "default": [
+                        "SecRuleEngine On",
+                        "Include @crs-setup-conf",
+                        "Include @owasp_crs/*.conf",
+                        "SecRule REQUEST_HEADERS:User-Agent \"(?:sqlmap|nikto|nmap|curl|wget)\" \"id:1000,phase:1,deny,status:403,log,msg:'OWASP CRS: Suspicious User-Agent'\"",
+                        "SecRule ARGS \"(?:union.*select|/etc/shadow|/bin/bash|/bin/sh)\" \"id:1001,phase:2,deny,status:403,log,msg:'OWASP CRS: Common attack payload'\""
+                      ]
+                    },
+                    "default_directives": "default"
+                  }
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: istiod
+spec:
+  mtls:
+    mode: STRICT
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: default
+  namespace: istiod
+spec:
+  host: "*.local"
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL

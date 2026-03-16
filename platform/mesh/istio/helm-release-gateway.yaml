@@ -1,0 +1,108 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: istio-gateway
+  namespace: istio-gateway
+spec:
+  dependsOn:
+    - name: istiod
+      namespace: istiod
+  interval: 10m0s
+  chart:
+    spec:
+      chart: gateway
+      sourceRef:
+        kind: HelmRepository
+        name: istio
+        namespace: flux-system
+  values:
+    labels:
+      istio: ingressgateway
+    service:
+      type: LoadBalancer
+      ports:
+        - name: status-port
+          port: 15021
+          targetPort: 15021
+        - name: http2
+          port: 80
+          targetPort: 8080
+        - name: https
+          port: 443
+          targetPort: 8443
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 5
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1337
+      fsGroup: 1337
+      seccompProfile:
+        type: RuntimeDefault
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
+    volumes:
+      - name: coraza-waf-rules
+        configMap:
+          name: coraza-waf-rules
+      - name: coraza-wasm
+        emptyDir: {}
+    volumeMounts:
+      - name: coraza-waf-rules
+        mountPath: /etc/coraza/owasp-crs
+        readOnly: true
+      - name: coraza-wasm
+        mountPath: /var/local/coraza
+        readOnly: true
+    initContainers:
+      - name: coraza-wasm-downloader
+        image: python:3.11-alpine
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1337
+          runAsGroup: 1337
+          capabilities:
+            drop:
+              - ALL
+        env:
+          - name: TMPDIR
+            value: /var/local/coraza
+        command:
+          - python
+          - -c
+          - |
+            import io
+            import os
+            import sys
+            import urllib.request
+            import zipfile
+
+            url = "https://github.com/corazawaf/coraza-proxy-wasm/releases/download/0.6.0/coraza-proxy-wasm-0.6.0.zip"
+            target = "/var/local/coraza/coraza.wasm"
+            data = urllib.request.urlopen(url).read()
+            zf = zipfile.ZipFile(io.BytesIO(data))
+            wasm_names = [n for n in zf.namelist() if n.endswith(".wasm")]
+            if not wasm_names:
+              print("No wasm file found in archive", file=sys.stderr)
+              sys.exit(1)
+            os.makedirs(os.path.dirname(target), exist_ok=True)
+            with zf.open(wasm_names[0]) as src, open(target, "wb") as dst:
+              dst.write(src.read())
+        volumeMounts:
+          - name: coraza-wasm
+            mountPath: /var/local/coraza

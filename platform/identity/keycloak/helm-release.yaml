@@ -1,0 +1,19 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: keycloak
+  namespace: platform-identity
+spec:
+  interval: 10m0s
+  serviceAccountName: keycloak-reconciler
+  chart:
+    spec:
+      chart: keycloak
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: keycloak-values
+      valuesKey: values.yaml

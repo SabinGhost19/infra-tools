@@ -1,0 +1,53 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: security-overview
+  namespace: grafana
+  labels:
+    app: grafana-dashboards
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  folder: Security
+  json: |
+    {
+      "id": null,
+      "uid": "security-overview",
+      "title": "Security Overview",
+      "description": "Combined view: Coraza WAF blocks + Falco runtime alerts",
+      "timezone": "browser",
+      "schemaVersion": 38,
+      "version": 2,
+      "refresh": "30s",
+      "time": { "from": "now-3h", "to": "now" },
+      "panels": [
+        {
+          "id": 1,
+          "type": "logs",
+          "title": "Coraza WAF Blocks (HTTP 403)",
+          "datasource": { "type": "loki", "uid": "loki" },
+          "targets": [{ "expr": "{namespace=\"istio-gateway\"} |~ \"(?i)coraza|waf|403|blocked\"" }],
+          "options": { "showLabels": true, "showTime": true, "sortOrder": "Descending" },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 }
+        },
+        {
+          "id": 2,
+          "type": "logs",
+          "title": "Falco CRITICAL Alerts",
+          "datasource": { "type": "loki", "uid": "loki" },
+          "targets": [{ "expr": "{source=\"syscall\"} |~ \"Critical\"" }],
+          "options": { "showLabels": true, "showTime": true, "sortOrder": "Descending" },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 }
+        },
+        {
+          "id": 3,
+          "type": "logs",
+          "title": "Prod Namespace - Suspicious Activity",
+          "datasource": { "type": "loki", "uid": "loki" },
+          "targets": [{ "expr": "{source=\"syscall\", k8s_ns_name=\"prod\"}" }],
+          "options": { "showLabels": true, "showTime": true, "sortOrder": "Descending" },
+          "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 }
+        }
+      ]
+    }

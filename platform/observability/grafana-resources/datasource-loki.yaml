@@ -1,0 +1,22 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: loki-datasource
+  namespace: grafana
+spec:
+  # Selecteaza instanta Grafana cu label dashboards: grafana
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasource:
+    name: Loki
+    uid: loki
+    type: loki
+    url: http://loki.loki:3100
+    access: proxy
+    isDefault: true
+    editable: false
+    jsonData:
+      maxLines: 5000
+      # Label-uri din Loki pe care Grafana le stie sa le parseze
+      derivedFields: []

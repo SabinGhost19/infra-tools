@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: nginx-test
+  namespace: prod
+spec:
+  hosts:
+    - nginx.demo.local
+  gateways:
+    - istio-gateway/nginx-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: nginx-test.prod.svc.cluster.local
+            port:
+              number: 80

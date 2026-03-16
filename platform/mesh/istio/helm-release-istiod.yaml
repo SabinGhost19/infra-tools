@@ -1,0 +1,71 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: istiod
+  namespace: istiod
+spec:
+  dependsOn:
+    - name: istio-cni
+      namespace: istio-system
+  interval: 10m0s
+  chart:
+    spec:
+      chart: istiod
+      sourceRef:
+        kind: HelmRepository
+        name: istio
+        namespace: flux-system
+  values:
+    global:
+      istioNamespace: istiod
+      meshID: mesh1
+      proxy:
+        logLevel: warning
+        componentLogLevel: misc:error
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+    seccompProfile:
+      type: RuntimeDefault
+    meshConfig:
+      enableAutoMtls: false
+      accessLogFile: /dev/stdout
+      accessLogEncoding: JSON
+      defaultConfig:
+        holdApplicationUntilProxyStarts: true
+        terminationDrainDuration: 30s
+        proxyMetadata:
+          ISTIO_META_DNS_CAPTURE: "true"
+          ISTIO_META_DNS_AUTO_ALLOCATE: "true"
+    pilot:
+      replicaCount: 2
+      autoscaleEnabled: true
+      autoscaleMin: 2
+      autoscaleMax: 5
+      resources:
+        requests:
+          cpu: 200m
+          memory: 256Mi
+        limits:
+          cpu: 1000m
+          memory: 1Gi
+      env:
+        PILOT_FILTER_GATEWAY_CLUSTER_CONFIG: "true"
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsUser: 1337
+        fsGroup: 1337
+        seccompProfile:
+          type: RuntimeDefault
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
+        seccompProfile:
+          type: RuntimeDefault

@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespaces.yaml
+  - helm-release-base.yaml
+  - helm-release-cni.yaml
+  - helm-release-istiod.yaml
+  - helm-release-gateway.yaml
+  - coraza-wasm-filter.yaml

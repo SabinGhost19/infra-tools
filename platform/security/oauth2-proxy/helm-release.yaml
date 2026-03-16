@@ -1,0 +1,19 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: oauth2-proxy
+  namespace: oauth2-proxy
+spec:
+  interval: 10m0s
+  serviceAccountName: oauth2-proxy-reconciler
+  chart:
+    spec:
+      chart: oauth2-proxy
+      sourceRef:
+        kind: HelmRepository
+        name: oauth2-proxy
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: oauth2-proxy-values
+      valuesKey: values.yaml

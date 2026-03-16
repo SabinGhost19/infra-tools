@@ -1,0 +1,78 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: falcosidekick
+  namespace: falco-sidekick
+spec:
+  dependsOn:
+    - name: falco
+      namespace: falco
+  interval: 10m0s
+  chart:
+    spec:
+      chart: falcosidekick
+      sourceRef:
+        kind: HelmRepository
+        name: falcosecurity
+        namespace: flux-system
+  values:
+    replicaCount: 2
+    config:
+      json: true
+      outputs:
+        loki: true
+        slack: false
+        webhook: true
+      loki:
+        hostport: http://loki.loki:3100
+        customHeaders: ""
+        tenant: ""
+        endpoint: /loki/api/v1/push
+        extraLabelsList:
+          - rule
+          - priority
+          - k8s.ns.name
+          - container.name
+          - hostname
+      slack:
+        webhookurl: ""
+        outputformat: all
+        minimumpriority: warning
+        messageformat: |
+          Falco Alert: *{{.Rule}}* | Priority: *{{.Priority}}*
+          ```{{.Output}}```
+      webhook:
+        address: http://falco-talon.falco-talon:2803
+      retry:
+        enabled: true
+        max: 30
+        interval: 5
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      fsGroup: 1000
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
+    rbac:
+      create: true
+    serviceAccount:
+      create: true
+    service:
+      port: 2801
+      type: ClusterIP
+    webui:
+      enabled: true
+      replicaCount: 1
+      redis:
+        enabled: true
