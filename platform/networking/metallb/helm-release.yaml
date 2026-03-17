@@ -28,20 +28,3 @@ spec:
       logLevel: info
       frr:
         enabled: false
-    extraDeploy:
-      - apiVersion: metallb.io/v1beta1
-        kind: IPAddressPool
-        metadata:
-          name: vpn-pool
-          namespace: metallb-system
-        spec:
-          addresses:
-            - 10.102.13.220-10.102.13.230
-      - apiVersion: metallb.io/v1beta1
-        kind: L2Advertisement
-        metadata:
-          name: vpn-l2
-          namespace: metallb-system
-        spec:
-          ipAddressPools:
-            - vpn-pool
