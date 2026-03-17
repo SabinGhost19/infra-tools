@@ -74,7 +74,7 @@ spec:
   mtls:
     mode: STRICT
 ---
-apiVersion: networking.istio.io/v1beta1
+apiVersion: networking.istio.io/v1
 kind: DestinationRule
 metadata:
   name: default

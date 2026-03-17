@@ -6,4 +6,3 @@ resources:
   - helm-release-cni.yaml
   - helm-release-istiod.yaml
   - helm-release-gateway.yaml
-  - coraza-wasm-filter.yaml
