@@ -11,7 +11,7 @@ data:
     keycloak:
       adminUser: admin
       existingSecret: keycloak-admin
-      hostname: http://keycloak.licenta.ro
+      hostname: keycloak.licenta.ro
       hostnameStrict: false
       httpEnabled: true
       proxyHeaders: xforwarded
@@ -21,6 +21,9 @@ data:
     ingress:
       enabled: true
       className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/proxy-buffer-size: "32k"
       hosts:
         - host: keycloak.licenta.ro
           paths:
