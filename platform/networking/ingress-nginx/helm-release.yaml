@@ -4,7 +4,17 @@ metadata:
   name: ingress-nginx
   namespace: ingress-nginx
 spec:
+  timeout: 15m0s
   interval: 10m0s
+  dependsOn:
+    - name: metallb
+      namespace: metallb-system
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: 3
   chart:
     spec:
       chart: ingress-nginx

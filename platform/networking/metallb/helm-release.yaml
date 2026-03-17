@@ -4,7 +4,14 @@ metadata:
   name: metallb
   namespace: metallb-system
 spec:
+  timeout: 15m0s
   interval: 10m0s
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: 3
   chart:
     spec:
       chart: metallb
