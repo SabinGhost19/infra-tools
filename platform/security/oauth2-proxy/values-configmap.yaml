@@ -42,6 +42,7 @@ data:
       pass-user-headers: "true"
       reverse-proxy: "true"
       skip-provider-button: "true"
+      skip-auth-route: "^/favicon.ico$"
 
     service:
       portNumber: 80
