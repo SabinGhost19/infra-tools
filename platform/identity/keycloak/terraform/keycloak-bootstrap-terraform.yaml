@@ -12,6 +12,7 @@ spec:
     name: infra-tools
     namespace: flux-system
   path: ./platform/identity/keycloak/terraform/tf
+  serviceAccountName: default
   writeOutputsToSecret:
     name: keycloak-bootstrap-outputs
   backendConfig:
