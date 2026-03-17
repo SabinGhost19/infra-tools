@@ -6,4 +6,4 @@ metadata:
 spec:
   interval: 10m0s
   type: oci
-  url: oci://quay.io/keycloak/keycloak-operator
+  url: oci://quay.io/keycloak/helm-charts
