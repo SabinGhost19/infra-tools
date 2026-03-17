@@ -79,6 +79,7 @@ data:
               "firstName": "Test",
               "lastName": "User",
               "enabled": true,
+              "emailVerified": true,
               "credentials": [
                 {
                   "type": "password",
