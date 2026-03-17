@@ -27,6 +27,10 @@ data:
             - path: /
               pathType: Prefix
 
+    service:
+      httpPort: 80
+      httpTargetPort: 8080
+
     realm:
       import: true
       configFile: |
