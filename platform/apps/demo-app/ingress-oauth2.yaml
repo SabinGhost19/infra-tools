@@ -16,3 +16,10 @@ spec:
                 name: oauth2-proxy
                 port:
                   number: 80
+          - path: /favicon.ico
+            pathType: Exact
+            backend:
+              service:
+                name: demo-nginx
+                port:
+                  number: 80
