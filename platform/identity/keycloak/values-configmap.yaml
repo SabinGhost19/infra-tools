@@ -42,6 +42,55 @@ data:
           "sslRequired": "external",
           "registrationAllowed": false,
           "loginWithEmailAllowed": true,
+          "clientScopes": [
+            {
+              "name": "groups",
+              "protocol": "openid-connect",
+              "attributes": {
+                "include.in.token.scope": "true",
+                "display.on.consent.screen": "true"
+              },
+              "protocolMappers": [
+                {
+                  "name": "groups",
+                  "protocol": "openid-connect",
+                  "protocolMapper": "oidc-group-membership-mapper",
+                  "consentRequired": false,
+                  "config": {
+                    "claim.name": "groups",
+                    "full.path": "false",
+                    "access.token.claim": "true",
+                    "id.token.claim": "true",
+                    "userinfo.token.claim": "true"
+                  }
+                }
+              ]
+            }
+          ],
+          "groups": [
+            {
+              "name": "SG_PlatformEngineers"
+            }
+          ],
+          "users": [
+            {
+              "username": "testuser",
+              "email": "testuser@licenta.ro",
+              "firstName": "Test",
+              "lastName": "User",
+              "enabled": true,
+              "credentials": [
+                {
+                  "type": "password",
+                  "value": "TestPass123!",
+                  "temporary": false
+                }
+              ],
+              "groups": [
+                "/SG_PlatformEngineers"
+              ]
+            }
+          ],
           "clients": [
             {
               "clientId": "oauth2-proxy",
@@ -60,6 +109,21 @@ data:
               "webOrigins": [
                 "http://demo.licenta.ro"
               ],
+              "defaultClientScopes": [
+                "web-origins",
+                "acr",
+                "profile",
+                "roles",
+                "basic",
+                "email"
+              ],
+              "optionalClientScopes": [
+                "address",
+                "phone",
+                "offline_access",
+                "microprofile-jwt",
+                "groups"
+              ],
               "protocolMappers": [
                 {
                   "name": "oauth2-proxy-audience",
@@ -68,19 +132,6 @@ data:
                   "consentRequired": false,
                   "config": {
                     "included.client.audience": "oauth2-proxy",
-                    "access.token.claim": "true",
-                    "id.token.claim": "true",
-                    "userinfo.token.claim": "true"
-                  }
-                },
-                {
-                  "name": "groups",
-                  "protocol": "openid-connect",
-                  "protocolMapper": "oidc-group-membership-mapper",
-                  "consentRequired": false,
-                  "config": {
-                    "claim.name": "groups",
-                    "full.path": "false",
                     "access.token.claim": "true",
                     "id.token.claim": "true",
                     "userinfo.token.claim": "true"
