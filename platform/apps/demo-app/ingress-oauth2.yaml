@@ -3,6 +3,9 @@ kind: Ingress
 metadata:
   name: demo-oauth2-endpoints
   namespace: demo-app
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "32k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
 spec:
   ingressClassName: nginx
   rules:

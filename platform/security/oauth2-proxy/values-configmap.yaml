@@ -36,13 +36,13 @@ data:
       cookie-secure: "false"
       cookie-httponly: "true"
       cookie-samesite: lax
+      session-cookie-minimal: "true"
       set-xauthrequest: "true"
-      set-authorization-header: "true"
-      pass-access-token: "true"
+      set-authorization-header: "false"
+      pass-access-token: "false"
       pass-user-headers: "true"
       reverse-proxy: "true"
       skip-provider-button: "true"
-      skip-auth-route: "^/favicon.ico$"
 
     service:
       portNumber: 80
