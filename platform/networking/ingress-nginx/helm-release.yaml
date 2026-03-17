@@ -37,3 +37,5 @@ spec:
         enabled: true
       metrics:
         enabled: true
+      config:
+        ssl-redirect: "false"
