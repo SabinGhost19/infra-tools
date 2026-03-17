@@ -29,7 +29,7 @@ data:
       http-address: 0.0.0.0:4180
       upstream: static://200
       redirect-url: http://demo.licenta.ro/oauth2/callback
-      oidc-issuer-url: http://keycloak.platform-identity.svc.cluster.local/realms/ZeroTrust-Realm
+      oidc-issuer-url: http://keycloak.licenta.ro/realms/ZeroTrust-Realm
       email-domain: "*"
       scope: openid profile email groups
       allowed-group: SG_PlatformEngineers

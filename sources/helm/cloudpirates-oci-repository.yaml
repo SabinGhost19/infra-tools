@@ -1,9 +1,9 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: keycloak-operator-oci
+  name: cloudpirates-oci
   namespace: flux-system
 spec:
   interval: 10m0s
   type: oci
-  url: oci://quay.io/keycloak/helm-charts
+  url: oci://registry-1.docker.io/cloudpirates
