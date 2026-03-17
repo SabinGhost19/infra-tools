@@ -3,5 +3,4 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - keycloak-provider-creds.yaml
-  - ldap-bind-secret.yaml
   - keycloak-bootstrap-terraform.yaml

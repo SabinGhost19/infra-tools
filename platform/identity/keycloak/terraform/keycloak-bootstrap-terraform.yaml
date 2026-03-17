@@ -31,22 +31,6 @@ spec:
             secretKeyRef:
               name: keycloak-provider-creds
               key: KEYCLOAK_PASSWORD
-        - name: TF_VAR_ldap_url
-          value: "ldap://192.168.1.100:389"
-        - name: TF_VAR_ldap_bind_dn
-          valueFrom:
-            secretKeyRef:
-              name: ldap-bind-secret
-              key: LDAP_BIND_DN
-        - name: TF_VAR_ldap_bind_password
-          valueFrom:
-            secretKeyRef:
-              name: ldap-bind-secret
-              key: LDAP_BIND_PASSWORD
-        - name: TF_VAR_ldap_users_dn
-          value: "ou=Angajati,dc=licenta,dc=ro"
-        - name: TF_VAR_ldap_groups_dn
-          value: "ou=GrupuriSecuritate,dc=licenta,dc=ro"
   inline: |
     terraform {
       required_version = ">= 1.6.0"
@@ -72,14 +56,6 @@ spec:
       type      = string
       sensitive = true
     }
-    variable "ldap_url" { type = string }
-    variable "ldap_bind_dn" { type = string }
-    variable "ldap_bind_password" {
-      type      = string
-      sensitive = true
-    }
-    variable "ldap_users_dn" { type = string }
-    variable "ldap_groups_dn" { type = string }
 
     provider "keycloak" {
       client_id = "admin-cli"
