@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns-custom
+  namespace: kube-system
+data:
+  keycloak.override: |
+    rewrite name keycloak.licenta.ro keycloak.platform-identity.svc.cluster.local
