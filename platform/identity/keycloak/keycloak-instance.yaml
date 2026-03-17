@@ -1,0 +1,29 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  name: keycloak
+  namespace: platform-identity
+spec:
+  instances: 1
+  image: quay.io/keycloak/keycloak:26.1.0
+  db:
+    vendor: postgres
+    host: keycloak-postgresql.platform-identity.svc.cluster.local
+    port: 5432
+    database: keycloak
+    usernameSecret:
+      name: keycloak-external-db
+      key: username
+    passwordSecret:
+      name: keycloak-external-db
+      key: password
+  hostname:
+    hostname: keycloak.licenta.ro
+    strict: false
+  http:
+    httpEnabled: true
+  additionalOptions:
+    - name: proxy
+      value: edge
+    - name: http-relative-path
+      value: /

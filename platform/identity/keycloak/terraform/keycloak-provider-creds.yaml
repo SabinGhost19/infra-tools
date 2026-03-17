@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: keycloak-provider-creds
-  namespace: platform-day2
-type: Opaque
-stringData:
-  KEYCLOAK_USER: admin
-  KEYCLOAK_PASSWORD: ChangeMe123!

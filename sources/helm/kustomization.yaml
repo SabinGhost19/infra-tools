@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - bitnami-repository.yaml
   - bitnami-oci-repository.yaml
+  - keycloak-operator-oci-repository.yaml
   - oauth2-proxy-repository.yaml
   - istio-repository.yaml
   - falcosecurity-repository.yaml
