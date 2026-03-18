@@ -9,10 +9,10 @@ terraform {
 }
 
 locals {
-  vault_addr            = "http://vault.vault.svc.cluster.local:8200"
-  vault_token           = "root"
-  secret_mount_path     = "secret"
-  kubernetes_auth_path  = "kubernetes"
+  vault_addr           = "http://vault.vault.svc.cluster.local:8200"
+  vault_token          = "root"
+  secret_mount_path    = "secret"
+  kubernetes_auth_path = "kubernetes"
 }
 
 provider "vault" {
