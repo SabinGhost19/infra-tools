@@ -9,18 +9,15 @@ terraform {
 }
 
 locals {
-  vault_addr  = "http://vault.vault.svc.cluster.local:8200"
-  vault_token = "root"
+  vault_addr            = "http://vault.vault.svc.cluster.local:8200"
+  vault_token           = "root"
+  secret_mount_path     = "secret"
+  kubernetes_auth_path  = "kubernetes"
 }
 
 provider "vault" {
   address = local.vault_addr
   token   = local.vault_token
-}
-
-resource "vault_mount" "secret" {
-  path = "secret"
-  type = "kv-v2"
 }
 
 resource "vault_policy" "demo_api_policy" {
@@ -32,13 +29,8 @@ path "secret/data/prod/demo-api/*" {
 EOT
 }
 
-resource "vault_auth_backend" "kubernetes" {
-  type = "kubernetes"
-  path = "kubernetes"
-}
-
 resource "vault_kubernetes_auth_backend_config" "config" {
-  backend                = vault_auth_backend.kubernetes.path
+  backend                = local.kubernetes_auth_path
   kubernetes_host        = "https://kubernetes.default.svc"
   kubernetes_ca_cert     = file("/var/run/secrets/kubernetes.io/serviceaccount/ca.crt")
   token_reviewer_jwt     = file("/var/run/secrets/kubernetes.io/serviceaccount/token")
@@ -46,7 +38,7 @@ resource "vault_kubernetes_auth_backend_config" "config" {
 }
 
 resource "vault_kubernetes_auth_backend_role" "demo_api_prod_role" {
-  backend                          = vault_auth_backend.kubernetes.path
+  backend                          = local.kubernetes_auth_path
   role_name                        = "demo-api-prod-role"
   bound_service_account_names      = ["default", "external-secrets"]
   bound_service_account_namespaces = ["default", "external-secrets"]
@@ -55,7 +47,7 @@ resource "vault_kubernetes_auth_backend_role" "demo_api_prod_role" {
 }
 
 resource "vault_kv_secret_v2" "demo_api_config" {
-  mount = vault_mount.secret.path
+  mount = local.secret_mount_path
   name  = "prod/demo-api/config"
 
   data_json = jsonencode({
