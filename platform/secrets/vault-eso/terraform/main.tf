@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.6.0"
+  required_version = ">= 1.3.0, < 2.0.0"
   required_providers {
     vault = {
       source  = "hashicorp/vault"
@@ -8,15 +8,14 @@ terraform {
   }
 }
 
-variable "vault_addr" { type = string }
-variable "vault_token" {
-  type      = string
-  sensitive = true
+locals {
+  vault_addr  = "http://vault.vault.svc.cluster.local:8200"
+  vault_token = "root"
 }
 
 provider "vault" {
-  address = var.vault_addr
-  token   = var.vault_token
+  address = local.vault_addr
+  token   = local.vault_token
 }
 
 resource "vault_mount" "secret" {
