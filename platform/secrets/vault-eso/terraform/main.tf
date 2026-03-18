@@ -26,10 +26,6 @@ resource "vault_policy" "demo_api_policy" {
 path "secret/data/prod/demo-api/*" {
   capabilities = ["read"]
 }
-
-path "secret/data/prod/custom-app/*" {
-  capabilities = ["read"]
-}
 EOT
 }
 
@@ -61,15 +57,5 @@ resource "vault_kv_secret_v2" "demo_api_config" {
   data_json = jsonencode({
     username = "demo_user"
     password = "demo_pass_v1"
-  })
-}
-
-resource "vault_kv_secret_v2" "custom_app_config" {
-  mount = local.secret_mount_path
-  name  = "prod/custom-app/config"
-
-  data_json = jsonencode({
-    api_key   = "custom_api_key_v1"
-    api_token = "custom_api_token_v1"
   })
 }
