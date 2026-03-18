@@ -29,15 +29,20 @@ path "secret/data/prod/demo-api/*" {
 EOT
 }
 
+resource "vault_auth_backend" "kubernetes" {
+  type = "kubernetes"
+  path = local.kubernetes_auth_path
+}
+
 resource "vault_kubernetes_auth_backend_config" "config" {
-  backend                = local.kubernetes_auth_path
+  backend                = vault_auth_backend.kubernetes.path
   kubernetes_host        = "https://kubernetes.default.svc"
   kubernetes_ca_cert     = file("/var/run/secrets/kubernetes.io/serviceaccount/ca.crt")
   disable_iss_validation = true
 }
 
 resource "vault_kubernetes_auth_backend_role" "demo_api_prod_role" {
-  backend                          = local.kubernetes_auth_path
+  backend                          = vault_auth_backend.kubernetes.path
   role_name                        = "demo-api-prod-role"
   bound_service_account_names      = ["default", "external-secrets"]
   bound_service_account_namespaces = ["default", "external-secrets"]
