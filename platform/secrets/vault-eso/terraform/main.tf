@@ -33,7 +33,6 @@ resource "vault_kubernetes_auth_backend_config" "config" {
   backend                = local.kubernetes_auth_path
   kubernetes_host        = "https://kubernetes.default.svc"
   kubernetes_ca_cert     = file("/var/run/secrets/kubernetes.io/serviceaccount/ca.crt")
-  token_reviewer_jwt     = file("/var/run/secrets/kubernetes.io/serviceaccount/token")
   disable_iss_validation = true
 }
 
