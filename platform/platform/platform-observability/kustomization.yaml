@@ -8,4 +8,5 @@ resources:
   - tempo
   - prometheus
   - prometheus-instance
+  - flux-monitoring
   - grafana-operator

@@ -1,0 +1,22 @@
+# WARNING: Flux custom metrics via kube-state-metrics can cause high-cardinality growth in large clusters.
+# Scope labels/selectors carefully and monitor Prometheus TSDB growth.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: flux-kube-state-metrics
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/part-of: flux-monitoring
+    release: platform-prometheus
+spec:
+  namespaceSelector:
+    matchNames:
+      - flux-system
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kube-state-metrics
+      app.kubernetes.io/part-of: flux
+  endpoints:
+    - path: /metrics
+      interval: 30s
+      targetPort: 8080
