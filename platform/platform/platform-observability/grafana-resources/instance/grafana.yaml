@@ -6,7 +6,7 @@ metadata:
   labels:
     dashboards: grafana
 spec:
-  version: "11.5.2"
+  version: "12.4.0"
   deployment:
     spec:
       replicas: 1
