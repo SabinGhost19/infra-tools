@@ -1,0 +1,18 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: falco-security-alerts
+  namespace: monitoring
+  labels:
+    app: grafana-dashboards
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  folder: Security
+  grafanaCom:
+    id: 17361
+    revision: 1
+  datasource:
+    - inputName: DS_LOKI
+      datasourceName: Loki

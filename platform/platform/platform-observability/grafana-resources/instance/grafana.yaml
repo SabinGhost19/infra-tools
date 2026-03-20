@@ -2,10 +2,8 @@ apiVersion: grafana.integreatly.org/v1beta1
 kind: Grafana
 metadata:
   name: grafana
-  namespace: grafana
+  namespace: monitoring
   labels:
-    # Acest label este folosit de GrafanaDatasource si GrafanaDashboard
-    # ca instanceSelector pentru a sti la ce instanta Grafana sa se aplice
     dashboards: grafana
 spec:
   config:
@@ -24,7 +22,6 @@ spec:
   service:
     spec:
       type: ClusterIP
-  # Resurse pentru pod-ul Grafana
   deployment:
     spec:
       template:

@@ -1,0 +1,18 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: node-exporter-full
+  namespace: monitoring
+  labels:
+    app: grafana-dashboards
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  folder: Infrastructure
+  grafanaCom:
+    id: 1860
+    revision: 37
+  datasource:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
