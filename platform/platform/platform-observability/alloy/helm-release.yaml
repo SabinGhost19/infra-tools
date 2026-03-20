@@ -160,3 +160,16 @@ spec:
       create: true
     serviceAccount:
       create: true
+    service:
+      enabled: true
+      type: ClusterIP
+      ports:
+        - name: http-metrics
+          port: 12345
+          targetPort: 12345
+        - name: otlp-grpc
+          port: 4317
+          targetPort: 4317
+        - name: otlp-http
+          port: 4318
+          targetPort: 4318
