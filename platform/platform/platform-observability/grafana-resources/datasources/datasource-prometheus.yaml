@@ -11,7 +11,7 @@ spec:
     name: Prometheus
     uid: prometheus
     type: prometheus
-    url: http://kube-prometheus-stack-prometheus.operators-monitoring:9090
+    url: http://platform-prometheus.monitoring:9090
     access: proxy
     editable: false
     isDefault: false

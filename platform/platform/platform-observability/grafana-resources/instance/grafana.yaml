@@ -7,6 +7,11 @@ metadata:
     dashboards: grafana
 spec:
   version: "11.5.2"
+  deployment:
+    spec:
+      replicas: 1
+      strategy:
+        type: Recreate
   config:
     server:
       root_url: "%(protocol)s://%(domain)s/"
