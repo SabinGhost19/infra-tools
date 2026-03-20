@@ -13,6 +13,13 @@ spec:
       strategy:
         type: Recreate
   config:
+    database:
+      type: postgres
+      host: grafana-postgresql.monitoring.svc.cluster.local:5432
+      name: grafana
+      user: grafana
+      password: CHANGE_ME_GRAFANA_DB_PASSWORD
+      ssl_mode: disable
     server:
       root_url: "%(protocol)s://%(domain)s/"
     auth:

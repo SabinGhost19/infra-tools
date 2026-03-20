@@ -1,0 +1,30 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grafana-postgresql
+  namespace: monitoring
+spec:
+  interval: 10m0s
+  chart:
+    spec:
+      chart: postgresql
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: flux-system
+  values:
+    auth:
+      username: grafana
+      password: CHANGE_ME_GRAFANA_DB_PASSWORD
+      database: grafana
+    primary:
+      persistence:
+        enabled: true
+        size: 10Gi
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 1Gi

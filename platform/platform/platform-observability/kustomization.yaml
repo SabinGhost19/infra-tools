@@ -10,3 +10,4 @@ resources:
   - prometheus-instance
   - flux-monitoring
   - grafana-operator
+  - grafana-postgresql
