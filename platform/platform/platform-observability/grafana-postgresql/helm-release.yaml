@@ -5,13 +5,10 @@ metadata:
   namespace: monitoring
 spec:
   interval: 10m0s
-  chart:
-    spec:
-      chart: postgresql
-      sourceRef:
-        kind: HelmRepository
-        name: bitnami-oci
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: bitnami-postgresql
+    namespace: flux-system
   values:
     auth:
       username: grafana
