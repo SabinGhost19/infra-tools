@@ -9,6 +9,9 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: grafana
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
   folder: Security
   grafanaCom:
     id: 17813

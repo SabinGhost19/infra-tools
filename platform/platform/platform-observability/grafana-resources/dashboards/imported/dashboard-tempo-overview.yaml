@@ -9,6 +9,13 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: grafana
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+    - inputName: DS_TEMPO
+      datasourceName: Tempo
+    - inputName: DS_LOKI
+      datasourceName: Loki
   folder: Tracing
   grafanaCom:
     id: 19419
