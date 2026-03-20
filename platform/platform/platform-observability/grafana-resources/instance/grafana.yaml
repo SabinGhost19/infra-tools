@@ -12,8 +12,8 @@ spec:
     auth:
       disable_login_form: "false"
     security:
-      admin_user: admin
-      admin_password: CHANGEME_GRAFANA_ADMIN
+      admin_user: platform_grafana_admin
+      admin_password: CHANGE_ME_STRONG_GRAFANA_PASSWORD
     log:
       mode: console
       level: warn
