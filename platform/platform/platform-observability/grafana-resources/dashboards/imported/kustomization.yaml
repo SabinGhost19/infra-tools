@@ -6,6 +6,7 @@ resources:
   - dashboard-falco-security.yaml
   - dashboard-trivy-operator.yaml
   - dashboard-k8s-resource-monitoring.yaml
+  - dashboard-k8s-cluster-monitoring.yaml
   - dashboard-node-exporter-full.yaml
   - dashboard-ksm-overview.yaml
   - dashboard-tempo-overview.yaml
