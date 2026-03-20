@@ -17,6 +17,13 @@ spec:
       reportingEnabled: false
       metricsGenerator:
         enabled: true
+        remoteWriteUrl: "http://platform-prometheus.monitoring:9090/api/v1/write"
+      overrides:
+        defaults:
+          metrics_generator:
+            processors:
+              - service-graphs
+              - span-metrics
     persistence:
       enabled: true
       size: 10Gi
