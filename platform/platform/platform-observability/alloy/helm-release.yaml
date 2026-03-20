@@ -154,6 +154,15 @@ spec:
       extraVolumeMounts:
         - name: tmp
           mountPath: /tmp
+      extraPorts:
+        - name: otlp-grpc
+          port: 4317
+          targetPort: 4317
+          protocol: TCP
+        - name: otlp-http
+          port: 4318
+          targetPort: 4318
+          protocol: TCP
     controller:
       type: daemonset
     rbac:
@@ -163,13 +172,3 @@ spec:
     service:
       enabled: true
       type: ClusterIP
-      ports:
-        - name: http-metrics
-          port: 12345
-          targetPort: 12345
-        - name: otlp-grpc
-          port: 4317
-          targetPort: 4317
-        - name: otlp-http
-          port: 4318
-          targetPort: 4318
