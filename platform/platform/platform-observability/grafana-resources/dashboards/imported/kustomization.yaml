@@ -1,8 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+commonLabels:
+  grafana.resources/reconcile: "v2"
 resources:
   - dashboard-falco-security.yaml
-  - dashboard-security-overview.yaml
   - dashboard-node-exporter-full.yaml
   - dashboard-ksm-overview.yaml
   - dashboard-tempo-overview.yaml
