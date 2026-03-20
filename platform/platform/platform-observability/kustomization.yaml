@@ -7,4 +7,5 @@ resources:
   - alloy
   - tempo
   - prometheus
+  - prometheus-instance
   - grafana-operator

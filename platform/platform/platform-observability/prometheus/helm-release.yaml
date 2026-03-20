@@ -20,11 +20,9 @@ spec:
     prometheusOperator:
       enabled: true
     prometheus:
-      enabled: true
-      prometheusSpec:
-        enableRemoteWriteReceiver: true
+      enabled: false
     kube-state-metrics:
-      enabled: true
+      enabled: false
     nodeExporter:
       enabled: false
     prometheus-node-exporter:

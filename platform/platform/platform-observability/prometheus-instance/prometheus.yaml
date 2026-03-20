@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: platform-prometheus
+  namespace: monitoring
+spec:
+  replicas: 1
+  serviceAccountName: platform-prometheus
+  enableRemoteWriteReceiver: true
+  retention: 2d
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  serviceMonitorSelector: {}
+  serviceMonitorNamespaceSelector: {}
+  podMonitorSelector: {}
+  podMonitorNamespaceSelector: {}
+  ruleSelector: {}
+  ruleNamespaceSelector: {}

@@ -32,7 +32,7 @@ spec:
 
           prometheus.remote_write "default" {
             endpoint {
-              url = "http://kube-prometheus-stack-prometheus.operators-monitoring:9090/api/v1/write"
+              url = "http://platform-prometheus.monitoring:9090/api/v1/write"
             }
           }
 
