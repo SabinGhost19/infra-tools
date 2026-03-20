@@ -4,6 +4,7 @@ resources:
   - aquasecurity-repository.yaml
   - bitnami-repository.yaml
   - bitnami-oci-repository.yaml
+  - bitnami-postgresql-oci-repository.yaml
   - cloudpirates-oci-repository.yaml
   - oauth2-proxy-repository.yaml
   - istio-repository.yaml
