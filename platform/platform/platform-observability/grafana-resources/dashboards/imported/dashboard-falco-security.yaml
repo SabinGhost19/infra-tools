@@ -13,6 +13,3 @@ spec:
   grafanaCom:
     id: 17361
     revision: 1
-  datasource:
-    - inputName: DS_LOKI
-      datasourceName: Loki

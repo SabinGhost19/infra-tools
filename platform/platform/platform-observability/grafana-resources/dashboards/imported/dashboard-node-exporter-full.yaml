@@ -13,6 +13,3 @@ spec:
   grafanaCom:
     id: 1860
     revision: 37
-  datasource:
-    - inputName: DS_PROMETHEUS
-      datasourceName: Prometheus

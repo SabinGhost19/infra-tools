@@ -13,8 +13,3 @@ spec:
   grafanaCom:
     id: 19419
     revision: 3
-  datasource:
-    - inputName: DS_PROMETHEUS
-      datasourceName: Prometheus
-    - inputName: DS_TEMPO
-      datasourceName: Tempo
