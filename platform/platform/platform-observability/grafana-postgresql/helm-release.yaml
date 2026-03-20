@@ -10,7 +10,7 @@ spec:
       chart: postgresql
       sourceRef:
         kind: HelmRepository
-        name: bitnami
+        name: bitnami-oci
         namespace: flux-system
   values:
     auth:
