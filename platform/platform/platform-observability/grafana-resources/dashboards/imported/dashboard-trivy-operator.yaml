@@ -1,0 +1,15 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: trivy-operator-security
+  namespace: monitoring
+  labels:
+    app: grafana-dashboards
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  folder: Security
+  grafanaCom:
+    id: 17813
+    revision: 1
