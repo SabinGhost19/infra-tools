@@ -11,7 +11,7 @@ terraform {
 locals {
   keycloak_url                 = "http://keycloak.platform-identity.svc.cluster.local"
   keycloak_admin_username      = "admin"
-  keycloak_admin_password      = "AdminPass-2026-Demo"
+  keycloak_admin_password      = "ChangeMe123!"
   realm_name                   = "ZeroTrust-Realm"
   harbor_client_secret         = "HarborOIDCSecret-2026-Demo"
   tekton_client_secret         = "TektonOIDCSecret-2026-Demo"
