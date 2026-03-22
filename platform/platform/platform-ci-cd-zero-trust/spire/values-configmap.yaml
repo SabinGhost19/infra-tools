@@ -16,7 +16,11 @@ data:
       dataStore:
         sql:
           databaseType: postgres
-          connectionString: postgres://spire:SpireDBPass-2026-Demo@spire-postgresql.spire-system.svc.cluster.local:5432/spire?sslmode=disable
+          databaseName: spire
+          host: spire-postgresql.spire-system.svc.cluster.local
+          port: 5432
+          username: spire
+          password: SpireDBPass-2026-Demo
       caSubject:
         country: RO
         organization: LICENTA
