@@ -1,29 +1,28 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: tekton-triggers
-  namespace: tekton-pipelines
+  name: tekton-operator
+  namespace: flux-system
 spec:
-  dependsOn:
-    - name: tekton-pipeline
   interval: 10m0s
-  timeout: 10m0s
+  timeout: 20m0s
   driftDetection:
     mode: enabled
   install:
+    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     remediation:
       retries: 3
       remediateLastFailure: true
+  targetNamespace: tekton-operator
   chart:
     spec:
-      chart: tekton-triggers
+      chart: charts/tekton-operator
       sourceRef:
-        kind: HelmRepository
-        name: tekton
+        kind: GitRepository
+        name: tekton-operator-chart
         namespace: flux-system
   values:
-    eventlisteners:
-      replicas: 2
+    installCRDs: true

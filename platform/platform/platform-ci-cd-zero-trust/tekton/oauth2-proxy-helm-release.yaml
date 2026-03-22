@@ -4,8 +4,6 @@ metadata:
   name: oauth2-proxy-tekton-dashboard
   namespace: tekton-pipelines
 spec:
-  dependsOn:
-    - name: tekton-dashboard
   interval: 10m0s
   timeout: 10m0s
   driftDetection:
