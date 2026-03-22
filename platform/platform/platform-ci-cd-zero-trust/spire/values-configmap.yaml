@@ -21,6 +21,8 @@ data:
           port: 5432
           username: spire
           password: SpireDBPass-2026-Demo
+          options:
+            - sslmode: disable
       caSubject:
         country: RO
         organization: LICENTA
