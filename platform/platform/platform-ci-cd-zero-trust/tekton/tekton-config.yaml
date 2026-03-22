@@ -5,5 +5,3 @@ metadata:
 spec:
   profile: all
   targetNamespace: tekton-pipelines
-  platforms:
-    kubernetes: {}

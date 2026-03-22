@@ -25,4 +25,6 @@ spec:
         name: tekton-operator-chart
         namespace: flux-system
   values:
+    fullnameOverride: tekton-operator
+    nameOverride: tekton-operator
     installCRDs: true
