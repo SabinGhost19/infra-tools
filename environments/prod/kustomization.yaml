@@ -8,4 +8,5 @@ resources:
   - ../../platform/operators/operator-terraform
   - ../../platform/platform/platform-identity
   - ../../platform/platform/platform-security
+  - ../../platform/platform/platform-ci-cd-zero-trust
   - ../../platform/development/dev-apps

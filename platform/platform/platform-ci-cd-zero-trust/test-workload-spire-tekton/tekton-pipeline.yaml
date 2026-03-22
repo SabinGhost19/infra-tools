@@ -1,0 +1,162 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: git-clone-local
+  namespace: test-workload-spire-tekton
+spec:
+  params:
+    - name: url
+      type: string
+    - name: revision
+      type: string
+  workspaces:
+    - name: output
+  steps:
+    - name: clone
+      image: alpine/git:2.47.1
+      script: |
+        rm -rf "$(workspaces.output.path)"/*
+        git clone "$(params.url)" "$(workspaces.output.path)"
+        cd "$(workspaces.output.path)"
+        git checkout "$(params.revision)"
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: trivy-scan
+  namespace: test-workload-spire-tekton
+spec:
+  params:
+    - name: image
+      type: string
+  steps:
+    - name: scan
+      image: aquasec/trivy:0.58.1
+      script: |
+        trivy image --severity HIGH,CRITICAL --exit-code 1 --no-progress "$(params.image)"
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: kaniko-build
+  namespace: test-workload-spire-tekton
+spec:
+  params:
+    - name: image
+      type: string
+    - name: context
+      type: string
+      default: .
+  workspaces:
+    - name: source
+  steps:
+    - name: build-and-push
+      image: gcr.io/kaniko-project/executor:v1.23.2
+      env:
+        - name: DOCKER_CONFIG
+          value: /tekton/home/.docker
+      script: |
+        mkdir -p /tekton/home/.docker
+        cat <<EOF > /tekton/home/.docker/config.json
+        {
+          "auths": {
+            "harbor.licenta.local": {
+              "username": "$(cat /var/run/secrets/tekton/harbor/HARBOR_USERNAME)",
+              "password": "$(cat /var/run/secrets/tekton/harbor/HARBOR_PASSWORD)"
+            }
+          }
+        }
+        EOF
+        /kaniko/executor --context="$(workspaces.source.path)/$(params.context)" --destination="$(params.image)"
+      volumeMounts:
+        - name: harbor-credentials
+          mountPath: /var/run/secrets/tekton/harbor
+          readOnly: true
+  volumes:
+    - name: harbor-credentials
+      secret:
+        secretName: harbor-robot-credentials
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: cosign-sign
+  namespace: test-workload-spire-tekton
+spec:
+  params:
+    - name: image
+      type: string
+  steps:
+    - name: sign
+      image: ghcr.io/sigstore/cosign/cosign:v2.4.1
+      env:
+        - name: COSIGN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: cosign-keypair
+              key: cosign.password
+      script: |
+        cosign sign --key /var/run/secrets/tekton/cosign/cosign.key "$(params.image)"
+      volumeMounts:
+        - name: cosign-keypair
+          mountPath: /var/run/secrets/tekton/cosign
+          readOnly: true
+  volumes:
+    - name: cosign-keypair
+      secret:
+        secretName: cosign-keypair
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: zero-trust-cicd
+  namespace: test-workload-spire-tekton
+spec:
+  params:
+    - name: image
+      type: string
+    - name: git-url
+      type: string
+    - name: git-revision
+      type: string
+  workspaces:
+    - name: shared-workspace
+  tasks:
+    - name: fetch-source
+      taskRef:
+        name: git-clone-local
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: revision
+          value: $(params.git-revision)
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: build
+      runAfter:
+        - fetch-source
+      taskRef:
+        name: kaniko-build
+      params:
+        - name: image
+          value: $(params.image)
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: trivy
+      runAfter:
+        - build
+      taskRef:
+        name: trivy-scan
+      params:
+        - name: image
+          value: $(params.image)
+    - name: sign
+      runAfter:
+        - trivy
+      taskRef:
+        name: cosign-sign
+      params:
+        - name: image
+          value: $(params.image)

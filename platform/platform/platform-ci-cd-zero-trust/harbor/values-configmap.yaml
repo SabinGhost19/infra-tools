@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: harbor-values
+  namespace: harbor
+data:
+  values.yaml: |
+    expose:
+      type: ingress
+      tls:
+        enabled: true
+        certSource: secret
+        secret:
+          secretName: harbor-tls
+      ingress:
+        hosts:
+          core: harbor.licenta.local
+        className: nginx
+        annotations:
+          cert-manager.io/cluster-issuer: letsencrypt-prod
+    externalURL: https://harbor.licenta.local
+
+    trivy:
+      enabled: true
+      ignoreUnfixed: false
+      severity: HIGH,CRITICAL
+
+    notary:
+      enabled: true
+
+    persistence:
+      enabled: true
+      persistentVolumeClaim:
+        registry:
+          size: 100Gi
+        chartmuseum:
+          size: 5Gi
+        jobservice:
+          jobLog:
+            size: 5Gi
+        database:
+          size: 20Gi
+        redis:
+          size: 8Gi
+        trivy:
+          size: 8Gi
+
+    database:
+      type: internal
+    redis:
+      type: internal
+
+    harborAdminPassword: change-me
+
+    core:
+      extraEnvVars:
+        - name: CONFIG_OVERWRITE_JSON
+          value: |
+            {"auth_mode":"oidc_auth","oidc_name":"keycloak","oidc_endpoint":"http://keycloak.licenta.ro/realms/ZeroTrust-Realm","oidc_client_id":"harbor-oidc","oidc_scope":"openid,profile,email,groups","oidc_verify_cert":"false","oidc_auto_onboard":"true","oidc_user_claim":"preferred_username","oidc_groups_claim":"groups"}

@@ -1,0 +1,49 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kyverno
+  namespace: kyverno
+spec:
+  interval: 10m0s
+  timeout: 10m0s
+  driftDetection:
+    mode: enabled
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+  chart:
+    spec:
+      chart: kyverno
+      sourceRef:
+        kind: HelmRepository
+        name: kyverno
+        namespace: flux-system
+  values:
+    admissionController:
+      replicas: 3
+      rbac:
+        clusterRole:
+          extraResources:
+            - apiGroups:
+                - "*"
+              resources:
+                - "*"
+              verbs:
+                - get
+                - list
+                - watch
+    backgroundController:
+      replicas: 2
+    cleanupController:
+      enabled: true
+      replicas: 2
+    reportsController:
+      enabled: true
+      replicas: 2
+    config:
+      webhooks:
+        cleanupReports: true

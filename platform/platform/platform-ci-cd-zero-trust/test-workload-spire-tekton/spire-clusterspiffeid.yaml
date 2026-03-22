@@ -1,0 +1,12 @@
+apiVersion: spiffeid.spiffe.io/v1beta1
+kind: ClusterSPIFFEID
+metadata:
+  name: test-workload-spire-tekton
+spec:
+  className: spire
+  spiffeIDTemplate: spiffe://licenta.local/ns/{{ .PodMeta.Namespace }}/sa/{{ .PodSpec.ServiceAccountName }}
+  podSelector:
+    matchLabels:
+      security.licenta/attested: "true"
+  workloadSelectorTemplates:
+    - k8s:ns:test-workload-spire-tekton

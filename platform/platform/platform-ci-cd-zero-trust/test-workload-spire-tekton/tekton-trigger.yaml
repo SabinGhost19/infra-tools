@@ -1,0 +1,69 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: zt-cicd-binding
+  namespace: test-workload-spire-tekton
+spec:
+  params:
+    - name: gitrevision
+      value: $(body.metadata.revision)
+    - name: gitrepositoryurl
+      value: https://github.com/SabinGhost19/infra-tools
+    - name: image
+      value: harbor.licenta.local/test-project/demo-api:$(body.metadata.revision)
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: zt-cicd-template
+  namespace: test-workload-spire-tekton
+spec:
+  params:
+    - name: gitrevision
+    - name: gitrepositoryurl
+    - name: image
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1
+      kind: PipelineRun
+      metadata:
+        generateName: zt-cicd-
+        namespace: test-workload-spire-tekton
+      spec:
+        serviceAccountName: tekton-builder
+        pipelineRef:
+          name: zero-trust-cicd
+        params:
+          - name: git-revision
+            value: $(tt.params.gitrevision)
+          - name: git-url
+            value: $(tt.params.gitrepositoryurl)
+          - name: image
+            value: $(tt.params.image)
+        workspaces:
+          - name: shared-workspace
+            volumeClaimTemplate:
+              spec:
+                accessModes: ["ReadWriteOnce"]
+                resources:
+                  requests:
+                    storage: 5Gi
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: zt-cicd-listener
+  namespace: test-workload-spire-tekton
+spec:
+  serviceType: ClusterIP
+  triggers:
+    - name: flux-test-env-trigger
+      interceptors:
+        - ref:
+            name: cel
+          params:
+            - name: filter
+              value: body.metadata.sourcePath == 'deploy/test-env' && body.metadata.gpgSigned == 'true'
+      bindings:
+        - ref: zt-cicd-binding
+      template:
+        ref: zt-cicd-template

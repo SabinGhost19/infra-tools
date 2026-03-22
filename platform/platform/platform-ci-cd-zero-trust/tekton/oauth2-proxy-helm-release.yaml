@@ -1,0 +1,30 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: oauth2-proxy-tekton-dashboard
+  namespace: tekton-pipelines
+spec:
+  dependsOn:
+    - name: tekton-dashboard
+  interval: 10m0s
+  timeout: 10m0s
+  driftDetection:
+    mode: enabled
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+  chart:
+    spec:
+      chart: oauth2-proxy
+      sourceRef:
+        kind: HelmRepository
+        name: oauth2-proxy
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: oauth2-proxy-tekton-values
+      valuesKey: values.yaml

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-env-release-marker
+  namespace: test-workload-spire-tekton
+  annotations:
+    security.licenta/trivy: passed
+data:
+  sourcePath: deploy/test-env
+  note: Flux changes in this folder are used as secure CI/CD triggers.

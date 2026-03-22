@@ -1,0 +1,26 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tekton-dashboard
+  namespace: tekton-pipelines
+spec:
+  dependsOn:
+    - name: tekton-pipeline
+  interval: 10m0s
+  timeout: 10m0s
+  driftDetection:
+    mode: enabled
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+  chart:
+    spec:
+      chart: tekton-dashboard
+      sourceRef:
+        kind: HelmRepository
+        name: tekton
+        namespace: flux-system

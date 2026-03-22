@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spire-values
+  namespace: spire-system
+data:
+  values.yaml: |
+    global:
+      spire:
+        trustDomain: licenta.local
+
+    spire-server:
+      enabled: true
+      controllerManager:
+        enabled: true
+      dataStore:
+        sql:
+          databaseType: postgres
+          connectionString: postgres://spire:change-me-spire-db-password@spire-postgresql.spire-system.svc.cluster.local:5432/spire?sslmode=disable
+      ca_subject:
+        country: RO
+        organization: LICENTA
+        common_name: SPIRE Server
+
+    spire-agent:
+      enabled: true
+      socketPath: /run/spire/sockets
+      healthChecks:
+        enabled: true

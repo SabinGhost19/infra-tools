@@ -1,0 +1,41 @@
+apiVersion: kyverno.io/v1
+kind: Policy
+metadata:
+  name: enforce-signed-harbor-images
+  namespace: test-workload-spire-tekton
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: verify-harbor-signatures
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      context:
+        - name: cosignPubKey
+          apiCall:
+            urlPath: /api/v1/namespaces/test-workload-spire-tekton/secrets/cosign-keypair
+            jmesPath: 'data."cosign.pub" | base64_decode(@)'
+      verifyImages:
+        - imageReferences:
+            - "harbor.licenta.local/test-project/*"
+          mutateDigest: false
+          attestors:
+            - count: 1
+              entries:
+                - keys:
+                    publicKeys: "{{ cosignPubKey }}"
+    - name: require-trivy-passed-annotation
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+      validate:
+        message: Workloads must be stamped as passed by Trivy in the CI pipeline.
+        pattern:
+          metadata:
+            annotations:
+              security.licenta/trivy: "passed"
