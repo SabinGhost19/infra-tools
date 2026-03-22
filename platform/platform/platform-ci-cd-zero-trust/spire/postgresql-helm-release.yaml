@@ -15,14 +15,10 @@ spec:
     remediation:
       retries: 3
       remediateLastFailure: true
-  chart:
-    spec:
-      chart: postgresql
-      version: "18.5.9+327a271c05c9"
-      sourceRef:
-        kind: HelmRepository
-        name: bitnami
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: bitnami-postgresql
+    namespace: flux-system
   values:
     auth:
       database: spire

@@ -5,8 +5,10 @@ resources:
   - cert-manager-day2
   - spire
   - kyverno
+  - kyverno-day2
   - keycloak-bootstrap
   - minio
+  - minio-day2
   - harbor
   - tekton
   - test-workload-spire-tekton
