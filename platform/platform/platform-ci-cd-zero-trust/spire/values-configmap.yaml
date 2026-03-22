@@ -20,7 +20,7 @@ data:
       caSubject:
         country: RO
         organization: LICENTA
-        common_name: SPIRE Server
+        caName: SPIRE Server
 
     spire-agent:
       enabled: true
