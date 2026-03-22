@@ -3,7 +3,3 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - tekton-config.yaml
-  - oauth2-proxy-externalsecret.yaml
-  - oauth2-proxy-values-configmap.yaml
-  - oauth2-proxy-helm-release.yaml
-  - dashboard-ingress.yaml
