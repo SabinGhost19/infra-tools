@@ -17,7 +17,7 @@ data:
         sql:
           databaseType: postgres
           connectionString: postgres://spire:SpireDBPass-2026-Demo@spire-postgresql.spire-system.svc.cluster.local:5432/spire?sslmode=disable
-      ca_subject:
+      caSubject:
         country: RO
         organization: LICENTA
         common_name: SPIRE Server
