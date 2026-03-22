@@ -1,0 +1,24 @@
+apiVersion: infra.contrib.fluxcd.io/v1alpha2
+kind: Terraform
+metadata:
+  name: minio-harbor-storage-bootstrap
+  namespace: minio-tenant
+spec:
+  interval: 10m
+  approvePlan: auto
+  destroyResourcesOnDeletion: false
+  sourceRef:
+    kind: GitRepository
+    name: infra-tools
+    namespace: flux-system
+  path: ./platform/platform/platform-ci-cd-zero-trust/minio/terraform
+  serviceAccountName: tf-runner
+  writeOutputsToSecret:
+    name: minio-harbor-storage-outputs
+  backendConfig:
+    customConfiguration: |
+      backend "kubernetes" {
+        secret_suffix     = "minio-harbor-storage"
+        namespace         = "minio-tenant"
+        in_cluster_config = true
+      }

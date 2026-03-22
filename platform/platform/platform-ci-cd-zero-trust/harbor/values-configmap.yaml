@@ -30,6 +30,15 @@ data:
 
     persistence:
       enabled: true
+      imageChartStorage:
+        type: s3
+        s3:
+          region: us-east-1
+          bucket: harbor-storage
+          accesskey: harbor-registry-robot
+          secretkey: HarborRobotPass-2026-Demo
+          regionendpoint: http://harbor-storage-hl.minio-tenant.svc.cluster.local:9000
+          secure: false
       persistentVolumeClaim:
         registry:
           size: 100Gi
@@ -50,10 +59,10 @@ data:
     redis:
       type: internal
 
-    harborAdminPassword: change-me
+    harborAdminPassword: HarborAdminPass-2026-Demo
 
     core:
       extraEnvVars:
         - name: CONFIG_OVERWRITE_JSON
           value: |
-            {"auth_mode":"oidc_auth","oidc_name":"keycloak","oidc_endpoint":"http://keycloak.licenta.ro/realms/ZeroTrust-Realm","oidc_client_id":"harbor-oidc","oidc_scope":"openid,profile,email,groups","oidc_verify_cert":"false","oidc_auto_onboard":"true","oidc_user_claim":"preferred_username","oidc_groups_claim":"groups"}
+            {"auth_mode":"oidc_auth","oidc_name":"keycloak","oidc_endpoint":"http://keycloak.licenta.ro/realms/ZeroTrust-Realm","oidc_client_id":"harbor-oidc","oidc_client_secret":"HarborOIDCSecret-2026-Demo","oidc_scope":"openid,profile,email,groups","oidc_verify_cert":"false","oidc_auto_onboard":"true","oidc_user_claim":"preferred_username","oidc_groups_claim":"groups"}

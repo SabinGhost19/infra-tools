@@ -9,10 +9,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - tekton-dashboard.licenta.local
+        - tekton.licenta.local
       secretName: tekton-dashboard-tls
   rules:
-    - host: tekton-dashboard.licenta.local
+    - host: tekton.licenta.local
       http:
         paths:
           - path: /

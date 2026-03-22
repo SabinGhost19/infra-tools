@@ -16,7 +16,7 @@ data:
       dataStore:
         sql:
           databaseType: postgres
-          connectionString: postgres://spire:change-me-spire-db-password@spire-postgresql.spire-system.svc.cluster.local:5432/spire?sslmode=disable
+          connectionString: postgres://spire:SpireDBPass-2026-Demo@spire-postgresql.spire-system.svc.cluster.local:5432/spire?sslmode=disable
       ca_subject:
         country: RO
         organization: LICENTA

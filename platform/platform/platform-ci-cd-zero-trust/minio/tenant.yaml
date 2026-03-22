@@ -1,0 +1,17 @@
+apiVersion: minio.min.io/v2
+kind: Tenant
+metadata:
+  name: harbor-storage
+  namespace: minio-tenant
+spec:
+  image: quay.io/minio/minio:RELEASE.2025-02-03T21-03-04Z
+  requestAutoCert: false
+  mountPath: /export
+  users:
+    - name: harbor-storage-user
+  pools:
+    - name: pool-0
+      servers: 4
+      volumesPerServer: 2
+      size: 20Gi
+      storageClassName: local-path

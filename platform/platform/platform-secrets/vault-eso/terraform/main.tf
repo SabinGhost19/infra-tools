@@ -59,3 +59,35 @@ resource "vault_kv_secret_v2" "demo_api_config" {
     password = "demo_pass_v1"
   })
 }
+
+resource "vault_kv_secret_v2" "cicd_cosign" {
+  mount = local.secret_mount_path
+  name  = "cicd/cosign"
+
+  data_json = jsonencode({
+    private_key = "-----BEGIN ENCRYPTED SIGSTORE PRIVATE KEY-----\nDEMO_SIGSTORE_PRIVATE_KEY_2026\n-----END ENCRYPTED SIGSTORE PRIVATE KEY-----"
+    public_key  = "-----BEGIN PUBLIC KEY-----\nDEMO_SIGSTORE_PUBLIC_KEY_2026\n-----END PUBLIC KEY-----"
+    password    = "CosignPass-2026-Demo"
+  })
+}
+
+resource "vault_kv_secret_v2" "cicd_harbor_robot" {
+  mount = local.secret_mount_path
+  name  = "cicd/harbor-robot"
+
+  data_json = jsonencode({
+    username = "harbor-registry-robot"
+    password = "HarborRobotPass-2026-Demo"
+  })
+}
+
+resource "vault_kv_secret_v2" "cicd_tekton_dashboard_oidc" {
+  mount = local.secret_mount_path
+  name  = "cicd/tekton-dashboard-oidc"
+
+  data_json = jsonencode({
+    client_id     = "tekton-dashboard-oidc"
+    client_secret = "TektonOIDCSecret-2026-Demo"
+    cookie_secret = "TektonCookieSecret-2026-Demo-1234567890"
+  })
+}

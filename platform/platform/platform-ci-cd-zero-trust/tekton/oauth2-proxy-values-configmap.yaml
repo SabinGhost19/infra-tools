@@ -28,7 +28,7 @@ data:
       provider: keycloak-oidc
       http-address: 0.0.0.0:4180
       upstream: http://tekton-dashboard.tekton-pipelines.svc.cluster.local:9097
-      redirect-url: https://tekton-dashboard.licenta.local/oauth2/callback
+      redirect-url: https://tekton.licenta.local/oauth2/callback
       oidc-issuer-url: http://keycloak.licenta.ro/realms/ZeroTrust-Realm
       scope: openid profile email groups
       email-domain: "*"

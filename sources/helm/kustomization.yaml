@@ -2,6 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - cert-manager-repository.yaml
+  - minio-operator-repository.yaml
   - aquasecurity-repository.yaml
   - bitnami-repository.yaml
   - bitnami-oci-repository.yaml
