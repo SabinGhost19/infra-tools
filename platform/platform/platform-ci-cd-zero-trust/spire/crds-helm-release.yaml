@@ -1,12 +1,9 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: spire
+  name: spire-crds
   namespace: spire-system
 spec:
-  dependsOn:
-    - name: spire-crds
-    - name: spire-postgresql
   interval: 10m0s
   timeout: 10m0s
   driftDetection:
@@ -20,12 +17,8 @@ spec:
       remediateLastFailure: true
   chart:
     spec:
-      chart: spire
+      chart: spire-crds
       sourceRef:
         kind: HelmRepository
         name: spire
         namespace: flux-system
-  valuesFrom:
-    - kind: ConfigMap
-      name: spire-values
-      valuesKey: values.yaml
