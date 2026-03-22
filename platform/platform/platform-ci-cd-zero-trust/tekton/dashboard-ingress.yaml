@@ -4,7 +4,7 @@ metadata:
   name: tekton-dashboard
   namespace: tekton-pipelines
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: selfsigned-test
 spec:
   ingressClassName: nginx
   tls:
