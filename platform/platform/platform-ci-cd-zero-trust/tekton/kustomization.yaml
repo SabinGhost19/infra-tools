@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - tekton-config.yaml
+  - tekton-dashboard-ingress.yaml
