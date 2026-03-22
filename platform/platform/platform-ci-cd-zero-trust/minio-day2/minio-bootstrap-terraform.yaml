@@ -11,7 +11,7 @@ spec:
     kind: GitRepository
     name: infra-tools
     namespace: flux-system
-  path: ./platform/platform/platform-ci-cd-zero-trust/minio/terraform
+  path: ./platform/platform/platform-ci-cd-zero-trust/minio-day2/terraform
   serviceAccountName: tf-runner
   writeOutputsToSecret:
     name: minio-harbor-storage-outputs
