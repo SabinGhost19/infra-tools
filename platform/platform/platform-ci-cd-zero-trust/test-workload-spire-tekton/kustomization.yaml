@@ -1,10 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - namespace.yaml
-  - service-account-rbac.yaml
-  - externalsecrets.yaml
-  - spire-clusterspiffeid.yaml
-  - peer-authentication.yaml
-  - tekton-pipeline.yaml
-  - tekton-trigger.yaml
+  - bootstrap/namespace.yaml
+  - access-control/service-account-rbac.yaml
+  - identity/externalsecrets.yaml
+  - identity/spire-clusterspiffeid.yaml
+  - runtime/peer-authentication.yaml
+  - ci-cd/pipeline/tekton-pipeline.yaml
+  - ci-cd/triggers/tekton-trigger.yaml
