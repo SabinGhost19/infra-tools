@@ -10,7 +10,11 @@ spec:
     - name: gitrepositoryurl
       value: https://github.com/SabinGhost19/infra-tools
     - name: image
-      value: harbor.licenta.local/test-project/demo-api:main
+      value: harbor.licenta.local/test-project/test-cicd-app:main
+    - name: context
+      value: apps/test-cicd-app
+    - name: dockerfile
+      value: apps/test-cicd-app/Dockerfile
 ---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
@@ -22,6 +26,8 @@ spec:
     - name: gitrevision
     - name: gitrepositoryurl
     - name: image
+    - name: context
+    - name: dockerfile
   resourcetemplates:
     - apiVersion: tekton.dev/v1
       kind: PipelineRun
@@ -40,10 +46,19 @@ spec:
             value: $(tt.params.gitrepositoryurl)
           - name: image
             value: $(tt.params.image)
+          - name: context
+            value: $(tt.params.context)
+          - name: dockerfile
+            value: $(tt.params.dockerfile)
         workspaces:
           - name: shared-workspace
-            persistentVolumeClaim:
-              claimName: zt-cicd-shared-workspace
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 2Gi
 ---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: EventListener
@@ -67,7 +82,7 @@ spec:
             name: cel
           params:
             - name: filter
-              value: body.metadata.sourcePath == 'deploy/test-env' && body.metadata.gpgSigned == 'true'
+              value: body.metadata.sourcePath == 'apps/test-cicd-app' && body.metadata.gpgSigned == 'true'
       bindings:
         - ref: zt-cicd-binding
       template:

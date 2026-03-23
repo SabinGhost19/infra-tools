@@ -51,6 +51,9 @@ spec:
     - name: context
       type: string
       default: .
+    - name: dockerfile
+      type: string
+      default: Dockerfile
   workspaces:
     - name: source
   steps:
@@ -73,7 +76,7 @@ spec:
             }
           }
           EOF
-          /kaniko/executor --context="$(workspaces.source.path)/$(params.context)" --destination="$(params.image)"
+          /kaniko/executor --context="$(workspaces.source.path)/$(params.context)" --dockerfile="$(workspaces.source.path)/$(params.dockerfile)" --destination="$(params.image)"
       volumeMounts:
         - name: harbor-credentials
           mountPath: /var/run/secrets/tekton/harbor
@@ -125,6 +128,12 @@ spec:
       type: string
     - name: git-revision
       type: string
+    - name: context
+      type: string
+      default: apps/test-cicd-app
+    - name: dockerfile
+      type: string
+      default: apps/test-cicd-app/Dockerfile
   workspaces:
     - name: shared-workspace
   tasks:
@@ -147,6 +156,10 @@ spec:
       params:
         - name: image
           value: $(params.image)
+        - name: context
+          value: $(params.context)
+        - name: dockerfile
+          value: $(params.dockerfile)
       workspaces:
         - name: source
           workspace: shared-workspace
