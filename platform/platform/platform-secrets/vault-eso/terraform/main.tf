@@ -26,6 +26,10 @@ resource "vault_policy" "demo_api_policy" {
 path "secret/data/prod/demo-api/*" {
   capabilities = ["read"]
 }
+
+path "secret/data/cicd/*" {
+  capabilities = ["read"]
+}
 EOT
 }
 

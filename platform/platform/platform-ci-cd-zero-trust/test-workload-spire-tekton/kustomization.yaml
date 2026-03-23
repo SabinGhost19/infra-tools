@@ -4,7 +4,6 @@ resources:
   - namespace.yaml
   - service-account-rbac.yaml
   - externalsecrets.yaml
-  - kyverno-policy.yaml
   - spire-clusterspiffeid.yaml
   - peer-authentication.yaml
   - tekton-pipeline.yaml
