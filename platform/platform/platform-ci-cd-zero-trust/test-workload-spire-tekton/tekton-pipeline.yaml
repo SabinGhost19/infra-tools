@@ -18,7 +18,11 @@ spec:
         rm -rf "$(workspaces.output.path)"/*
         git clone "$(params.url)" "$(workspaces.output.path)"
         cd "$(workspaces.output.path)"
-        git checkout "$(params.revision)"
+        REV="$(params.revision)"
+        if echo "$REV" | grep -q '@sha1:'; then
+          REV="${REV##*@sha1:}"
+        fi
+        git checkout "$REV"
 ---
 apiVersion: tekton.dev/v1
 kind: Task
