@@ -55,7 +55,7 @@ spec:
     - name: source
   steps:
     - name: build-and-push
-      image: gcr.io/kaniko-project/executor:v1.23.2
+      image: gcr.io/kaniko-project/executor:debug
       env:
         - name: DOCKER_CONFIG
           value: /tekton/home/.docker

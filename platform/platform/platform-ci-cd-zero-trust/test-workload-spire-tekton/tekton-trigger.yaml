@@ -10,7 +10,7 @@ spec:
     - name: gitrepositoryurl
       value: https://github.com/SabinGhost19/infra-tools
     - name: image
-      value: harbor.licenta.local/test-project/demo-api:$(body.metadata.revision)
+      value: harbor.licenta.local/test-project/demo-api:main
 ---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
@@ -29,7 +29,8 @@ spec:
         generateName: zt-cicd-
         namespace: test-workload-spire-tekton
       spec:
-        serviceAccountName: tekton-builder
+        taskRunTemplate:
+          serviceAccountName: tekton-builder
         pipelineRef:
           name: zero-trust-cicd
         params:
@@ -41,12 +42,8 @@ spec:
             value: $(tt.params.image)
         workspaces:
           - name: shared-workspace
-            volumeClaimTemplate:
-              spec:
-                accessModes: ["ReadWriteOnce"]
-                resources:
-                  requests:
-                    storage: 5Gi
+            persistentVolumeClaim:
+              claimName: zt-cicd-shared-workspace
 ---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: EventListener

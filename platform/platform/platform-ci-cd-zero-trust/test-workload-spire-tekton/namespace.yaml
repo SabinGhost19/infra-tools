@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: test-workload-spire-tekton
   labels:
-    istio-injection: enabled
+    istio-injection: disabled
