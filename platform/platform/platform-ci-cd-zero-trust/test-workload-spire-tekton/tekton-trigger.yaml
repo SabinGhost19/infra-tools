@@ -54,6 +54,7 @@ metadata:
   name: zt-cicd-listener
   namespace: test-workload-spire-tekton
 spec:
+  serviceAccountName: tekton-builder
   resources:
     kubernetesResource:
       serviceType: ClusterIP
