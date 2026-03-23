@@ -57,6 +57,11 @@ spec:
   resources:
     kubernetesResource:
       serviceType: ClusterIP
+      spec:
+        template:
+          metadata:
+            annotations:
+              sidecar.istio.io/inject: "false"
   triggers:
     - name: flux-test-env-trigger
       interceptors:
