@@ -6,3 +6,5 @@ metadata:
 data:
   keycloak.override: |
     rewrite name keycloak.licenta.ro keycloak.platform-identity.svc.cluster.local
+  harbor.override: |
+    rewrite name harbor.licenta.local ingress-nginx-controller.ingress-nginx.svc.cluster.local

@@ -76,7 +76,11 @@ spec:
             }
           }
           EOF
-          /kaniko/executor --context="$(workspaces.source.path)/$(params.context)" --dockerfile="$(workspaces.source.path)/$(params.dockerfile)" --destination="$(params.image)"
+          /kaniko/executor \
+            --context="$(workspaces.source.path)/$(params.context)" \
+            --dockerfile="$(workspaces.source.path)/$(params.dockerfile)" \
+            --destination="$(params.image)" \
+            --skip-tls-verify-registry=harbor.licenta.local
       volumeMounts:
         - name: harbor-credentials
           mountPath: /var/run/secrets/tekton/harbor
