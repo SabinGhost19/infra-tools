@@ -1,4 +1,4 @@
-apiVersion: spiffeid.spiffe.io/v1beta1
+apiVersion: spire.spiffe.io/v1alpha1
 kind: ClusterSPIFFEID
 metadata:
   name: test-workload-spire-tekton
@@ -9,4 +9,4 @@ spec:
     matchLabels:
       security.licenta/attested: "true"
   workloadSelectorTemplates:
-    - k8s:ns:test-workload-spire-tekton
+    - "k8s:ns:test-workload-spire-tekton"
