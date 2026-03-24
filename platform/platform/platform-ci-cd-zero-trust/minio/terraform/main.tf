@@ -28,11 +28,12 @@ resource "minio_s3_bucket" "harbor_storage" {
 
 resource "minio_iam_user" "harbor_registry_robot" {
   name          = "harbor-registry-robot"
+  secret        = "HarborRobotPass-2026-Demo"
   force_destroy = true
 }
 
 resource "minio_iam_policy" "harbor_storage_rw" {
-  name   = "harbor-storage-rw"
+  name = "harbor-storage-rw"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
