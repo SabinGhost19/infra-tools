@@ -23,11 +23,6 @@ func main() {
 		_, _ = w.Write([]byte("ok"))
 	})
 
-	http.HandleFunc("/healthy", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("ok"))
-	})
-
 	addr := ":" + port
 	log.Printf("listening on %s", addr)
 	if err := http.ListenAndServe(addr, nil); err != nil {
