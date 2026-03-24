@@ -10,7 +10,7 @@ spec:
     - name: gitrepositoryurl
       value: https://github.com/SabinGhost19/infra-tools
     - name: image
-      value: harbor.licenta.local/test-project/test-cicd-app:main
+      value: harbor.licenta.local/project-licenta/test-cicd-app:main
     - name: context
       value: apps/test-cicd-app
     - name: dockerfile

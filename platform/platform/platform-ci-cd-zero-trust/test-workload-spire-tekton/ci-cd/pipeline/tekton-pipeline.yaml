@@ -76,19 +76,25 @@ spec:
             }
           }
           EOF
+          cat /var/run/secrets/tekton/harbor-ca/ca.crt >> /kaniko/ssl/certs/ca-certificates.crt
           /kaniko/executor \
             --context="$(workspaces.source.path)/$(params.context)" \
             --dockerfile="$(workspaces.source.path)/$(params.dockerfile)" \
-            --destination="$(params.image)" \
-            --skip-tls-verify-registry=harbor.licenta.local
+            --destination="$(params.image)"
       volumeMounts:
         - name: harbor-credentials
           mountPath: /var/run/secrets/tekton/harbor
+          readOnly: true
+        - name: harbor-ca
+          mountPath: /var/run/secrets/tekton/harbor-ca
           readOnly: true
   volumes:
     - name: harbor-credentials
       secret:
         secretName: harbor-robot-credentials
+    - name: harbor-ca
+      secret:
+        secretName: harbor-ca
 ---
 apiVersion: tekton.dev/v1
 kind: Task

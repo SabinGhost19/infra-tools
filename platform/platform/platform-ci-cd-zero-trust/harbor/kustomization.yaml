@@ -4,3 +4,8 @@ resources:
   - namespace.yaml
   - values-configmap.yaml
   - helm-release.yaml
+  - tf-runner-service-account.yaml
+  - tf-runner-role.yaml
+  - tf-runner-role-binding.yaml
+  - tf-runner-auth-delegator-clusterrolebinding.yaml
+  - harbor-bootstrap-terraform.yaml

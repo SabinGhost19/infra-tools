@@ -20,7 +20,7 @@ spec:
             jmesPath: 'data."cosign.pub" | base64_decode(@)'
       verifyImages:
         - imageReferences:
-            - "harbor.licenta.local/test-project/*"
+            - "harbor.licenta.local/project-licenta/*"
           mutateDigest: false
           attestors:
             - count: 1
