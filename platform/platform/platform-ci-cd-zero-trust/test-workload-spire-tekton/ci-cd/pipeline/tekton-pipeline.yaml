@@ -86,6 +86,8 @@ spec:
           /kaniko/executor \
             --context="$(workspaces.source.path)/$(params.run-id)/$(params.context)" \
             --dockerfile="$(workspaces.source.path)/$(params.run-id)/$(params.dockerfile)" \
+            --skip-tls-verify-registry=harbor.licenta.local \
+            --skip-tls-verify \
             --destination="$(params.image)"
       volumeMounts:
         - name: harbor-credentials
