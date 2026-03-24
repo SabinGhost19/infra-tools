@@ -5,9 +5,19 @@ metadata:
   namespace: operators-monitoring
 spec:
   interval: 10m0s
+  install:
+    timeout: 15m0s
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 15m0s
+    remediation:
+      retries: 3
+      remediateLastFailure: true
   chart:
     spec:
       chart: kube-prometheus-stack
+      version: 82.13.5
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
