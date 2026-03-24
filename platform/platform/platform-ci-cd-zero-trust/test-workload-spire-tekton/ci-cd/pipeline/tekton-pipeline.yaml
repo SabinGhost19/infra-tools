@@ -9,15 +9,19 @@ spec:
       type: string
     - name: revision
       type: string
+    - name: run-id
+      type: string
   workspaces:
     - name: output
   steps:
     - name: clone
       image: alpine/git:2.47.1
       script: |
-        rm -rf "$(workspaces.output.path)"/*
-        git clone "$(params.url)" "$(workspaces.output.path)"
-        cd "$(workspaces.output.path)"
+        RUN_DIR="$(workspaces.output.path)/$(params.run-id)"
+        rm -rf "$RUN_DIR"
+        mkdir -p "$RUN_DIR"
+        git clone "$(params.url)" "$RUN_DIR"
+        cd "$RUN_DIR"
         REV="$(params.revision)"
         if echo "$REV" | grep -q '@sha1:'; then
           REV="${REV##*@sha1:}"
@@ -54,6 +58,8 @@ spec:
     - name: dockerfile
       type: string
       default: Dockerfile
+    - name: run-id
+      type: string
   workspaces:
     - name: source
   steps:
@@ -78,8 +84,8 @@ spec:
           EOF
           cat /var/run/secrets/tekton/harbor-ca/ca.crt >> /kaniko/ssl/certs/ca-certificates.crt
           /kaniko/executor \
-            --context="$(workspaces.source.path)/$(params.context)" \
-            --dockerfile="$(workspaces.source.path)/$(params.dockerfile)" \
+            --context="$(workspaces.source.path)/$(params.run-id)/$(params.context)" \
+            --dockerfile="$(workspaces.source.path)/$(params.run-id)/$(params.dockerfile)" \
             --destination="$(params.image)"
       volumeMounts:
         - name: harbor-credentials
@@ -138,6 +144,8 @@ spec:
       type: string
     - name: git-revision
       type: string
+    - name: run-id
+      type: string
     - name: context
       type: string
       default: apps/test-cicd-app
@@ -155,6 +163,8 @@ spec:
           value: $(params.git-url)
         - name: revision
           value: $(params.git-revision)
+        - name: run-id
+          value: $(params.run-id)
       workspaces:
         - name: output
           workspace: shared-workspace
@@ -170,6 +180,8 @@ spec:
           value: $(params.context)
         - name: dockerfile
           value: $(params.dockerfile)
+        - name: run-id
+          value: $(params.run-id)
       workspaces:
         - name: source
           workspace: shared-workspace

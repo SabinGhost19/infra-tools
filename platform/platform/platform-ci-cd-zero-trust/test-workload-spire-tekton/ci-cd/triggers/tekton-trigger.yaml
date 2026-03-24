@@ -44,6 +44,8 @@ spec:
             value: $(tt.params.gitrevision)
           - name: git-url
             value: $(tt.params.gitrepositoryurl)
+          - name: run-id
+            value: $(context.pipelineRun.name)
           - name: image
             value: $(tt.params.image)
           - name: context
@@ -52,13 +54,8 @@ spec:
             value: $(tt.params.dockerfile)
         workspaces:
           - name: shared-workspace
-            volumeClaimTemplate:
-              spec:
-                accessModes:
-                  - ReadWriteOnce
-                resources:
-                  requests:
-                    storage: 2Gi
+            persistentVolumeClaim:
+              claimName: zt-cicd-shared-workspace
 ---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: EventListener

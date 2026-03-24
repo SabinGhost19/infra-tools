@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - bootstrap/namespace.yaml
   - access-control/service-account-rbac.yaml
+  - workspace/legacy/workspace-pvc.yaml
   - identity/externalsecrets.yaml
   - identity/spire-clusterspiffeid.yaml
   - runtime/peer-authentication.yaml
