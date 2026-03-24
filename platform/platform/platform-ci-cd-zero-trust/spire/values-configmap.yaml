@@ -11,8 +11,35 @@ data:
 
     spire-server:
       enabled: true
+      resources:
+        requests:
+          cpu: 250m
+          memory: 256Mi
+        limits:
+          cpu: 1000m
+          memory: 1Gi
+      livenessProbe:
+        initialDelaySeconds: 20
+        periodSeconds: 60
+        timeoutSeconds: 5
+        failureThreshold: 3
+      readinessProbe:
+        initialDelaySeconds: 10
+        periodSeconds: 10
       controllerManager:
         enabled: true
+        gcInterval: 30000000000
+        leaderElection:
+          leaseDuration: "60s"
+          renewDeadline: "40s"
+          retryPeriod: "15s"
+        resources:
+          requests:
+            cpu: 150m
+            memory: 192Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
       dataStore:
         sql:
           databaseType: postgres
@@ -21,8 +48,13 @@ data:
           port: 5432
           username: spire
           password: SpireDBPass-2026-Demo
+          maxOpenConns: 30
+          maxIdleConns: 10
+          connMaxLifetime: "30m"
           options:
             - sslmode: disable
+            - connect_timeout: 5
+            - application_name: spire-server
       caSubject:
         country: RO
         organization: LICENTA
@@ -33,3 +65,10 @@ data:
       socketPath: /run/spire/agent-sockets/spire-agent.sock
       healthChecks:
         enabled: true
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 300m
+          memory: 256Mi
