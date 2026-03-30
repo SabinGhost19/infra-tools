@@ -40,7 +40,9 @@ resource "minio_iam_policy" "harbor_storage_rw" {
       {
         Effect = "Allow"
         Action = [
-          "s3:ListBucket"
+          "s3:GetBucketLocation",
+          "s3:ListBucket",
+          "s3:ListBucketMultipartUploads"
         ]
         Resource = [
           "arn:aws:s3:::harbor-storage"
@@ -49,7 +51,9 @@ resource "minio_iam_policy" "harbor_storage_rw" {
       {
         Effect = "Allow"
         Action = [
+          "s3:AbortMultipartUpload",
           "s3:GetObject",
+          "s3:ListMultipartUploadParts",
           "s3:PutObject",
           "s3:DeleteObject"
         ]
