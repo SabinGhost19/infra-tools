@@ -173,6 +173,7 @@ spec:
     - name: build
       runAfter:
         - fetch-source
+      retries: 2
       taskRef:
         name: kaniko-build
       params:
