@@ -1,0 +1,24 @@
+apiVersion: infra.contrib.fluxcd.io/v1alpha2
+kind: Terraform
+metadata:
+  name: vault-prod-bootstrap
+  namespace: vault-prod
+spec:
+  interval: 10m
+  approvePlan: auto
+  destroyResourcesOnDeletion: false
+  sourceRef:
+    kind: GitRepository
+    name: infra-tools
+    namespace: flux-system
+  path: ./platform/platform/platform-secrets/vault-prod/terraform
+  serviceAccountName: tf-runner
+  writeOutputsToSecret:
+    name: vault-prod-bootstrap-outputs
+  backendConfig:
+    customConfiguration: |
+      backend "kubernetes" {
+        secret_suffix     = "vault-prod-bootstrap"
+        namespace         = "vault-prod"
+        in_cluster_config = true
+      }
