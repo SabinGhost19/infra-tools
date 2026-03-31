@@ -140,29 +140,46 @@ spec:
     - name: digest
       type: string
   steps:
+    - name: prepare-auth
+      image: cgr.dev/chainguard/busybox:latest
+      script: |
+        mkdir -p /tekton/home/.docker
+        cat <<EOF > /tekton/home/.docker/config.json
+        {
+          "auths": {
+            "harbor.licenta.local": {
+              "username": "$(cat /var/run/secrets/tekton/harbor/HARBOR_USERNAME)",
+              "password": "$(cat /var/run/secrets/tekton/harbor/HARBOR_PASSWORD)"
+            }
+          }
+        }
+        EOF
+      volumeMounts:
+        - name: harbor-credentials
+          mountPath: /var/run/secrets/tekton/harbor
+          readOnly: true
     - name: sign
       image: ghcr.io/sigstore/cosign/cosign:v2.4.1
+      command:
+        - cosign
+      args:
+        - sign
+        - --yes
+        - --allow-insecure-registry
+        - --key
+        - /var/run/secrets/tekton/cosign/cosign.key
+        - $(params.image)@$(params.digest)
       env:
         - name: COSIGN_PASSWORD
           valueFrom:
             secretKeyRef:
               name: cosign-keypair
               key: cosign.password
-      script: |
-        cat /var/run/secrets/tekton/harbor-ca/ca.crt >> /etc/ssl/certs/ca-certificates.crt
-        HARBOR_USERNAME="$(cat /var/run/secrets/tekton/harbor/HARBOR_USERNAME)"
-        HARBOR_PASSWORD="$(cat /var/run/secrets/tekton/harbor/HARBOR_PASSWORD)"
-        cosign login harbor.licenta.local -u "$HARBOR_USERNAME" -p "$HARBOR_PASSWORD"
-        cosign sign --yes --key /var/run/secrets/tekton/cosign/cosign.key "$(params.image)@$(params.digest)"
+        - name: DOCKER_CONFIG
+          value: /tekton/home/.docker
       volumeMounts:
         - name: cosign-keypair
           mountPath: /var/run/secrets/tekton/cosign
-          readOnly: true
-        - name: harbor-credentials
-          mountPath: /var/run/secrets/tekton/harbor
-          readOnly: true
-        - name: harbor-ca
-          mountPath: /var/run/secrets/tekton/harbor-ca
           readOnly: true
   volumes:
     - name: cosign-keypair
@@ -171,9 +188,6 @@ spec:
     - name: harbor-credentials
       secret:
         secretName: harbor-robot-credentials
-    - name: harbor-ca
-      secret:
-        secretName: harbor-ca
 ---
 apiVersion: tekton.dev/v1
 kind: Pipeline
