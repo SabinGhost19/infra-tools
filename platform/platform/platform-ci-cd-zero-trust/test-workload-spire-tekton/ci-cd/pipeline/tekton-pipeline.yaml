@@ -37,11 +37,31 @@ spec:
   params:
     - name: image
       type: string
+    - name: severity
+      type: string
+      default: CRITICAL
   steps:
     - name: scan
       image: aquasec/trivy:0.58.1
       script: |
-        trivy image --severity HIGH,CRITICAL --exit-code 1 --no-progress "$(params.image)"
+        cat /var/run/secrets/tekton/harbor-ca/ca.crt >> /etc/ssl/certs/ca-certificates.crt
+        TRIVY_USERNAME="$(cat /var/run/secrets/tekton/harbor/HARBOR_USERNAME)"
+        TRIVY_PASSWORD="$(cat /var/run/secrets/tekton/harbor/HARBOR_PASSWORD)"
+        trivy image --username "$TRIVY_USERNAME" --password "$TRIVY_PASSWORD" --scanners vuln --severity "$(params.severity)" --exit-code 1 --no-progress "$(params.image)"
+      volumeMounts:
+        - name: harbor-credentials
+          mountPath: /var/run/secrets/tekton/harbor
+          readOnly: true
+        - name: harbor-ca
+          mountPath: /var/run/secrets/tekton/harbor-ca
+          readOnly: true
+  volumes:
+    - name: harbor-credentials
+      secret:
+        secretName: harbor-robot-credentials
+    - name: harbor-ca
+      secret:
+        secretName: harbor-ca
 ---
 apiVersion: tekton.dev/v1
 kind: Task
@@ -49,6 +69,9 @@ metadata:
   name: kaniko-build
   namespace: test-workload-spire-tekton
 spec:
+  results:
+    - name: image-digest
+      description: Pushed OCI image digest.
   params:
     - name: image
       type: string
@@ -88,6 +111,7 @@ spec:
             --dockerfile="$(workspaces.source.path)/$(params.run-id)/$(params.dockerfile)" \
             --skip-tls-verify-registry=harbor.licenta.local \
             --skip-tls-verify \
+            --digest-file=/tekton/results/image-digest \
             --destination="$(params.image)"
       volumeMounts:
         - name: harbor-credentials
@@ -113,6 +137,8 @@ spec:
   params:
     - name: image
       type: string
+    - name: digest
+      type: string
   steps:
     - name: sign
       image: ghcr.io/sigstore/cosign/cosign:v2.4.1
@@ -123,15 +149,31 @@ spec:
               name: cosign-keypair
               key: cosign.password
       script: |
-        cosign sign --key /var/run/secrets/tekton/cosign/cosign.key "$(params.image)"
+        cat /var/run/secrets/tekton/harbor-ca/ca.crt >> /etc/ssl/certs/ca-certificates.crt
+        HARBOR_USERNAME="$(cat /var/run/secrets/tekton/harbor/HARBOR_USERNAME)"
+        HARBOR_PASSWORD="$(cat /var/run/secrets/tekton/harbor/HARBOR_PASSWORD)"
+        cosign login harbor.licenta.local -u "$HARBOR_USERNAME" -p "$HARBOR_PASSWORD"
+        cosign sign --yes --key /var/run/secrets/tekton/cosign/cosign.key "$(params.image)@$(params.digest)"
       volumeMounts:
         - name: cosign-keypair
           mountPath: /var/run/secrets/tekton/cosign
+          readOnly: true
+        - name: harbor-credentials
+          mountPath: /var/run/secrets/tekton/harbor
+          readOnly: true
+        - name: harbor-ca
+          mountPath: /var/run/secrets/tekton/harbor-ca
           readOnly: true
   volumes:
     - name: cosign-keypair
       secret:
         secretName: cosign-keypair
+    - name: harbor-credentials
+      secret:
+        secretName: harbor-robot-credentials
+    - name: harbor-ca
+      secret:
+        secretName: harbor-ca
 ---
 apiVersion: tekton.dev/v1
 kind: Pipeline
@@ -154,6 +196,9 @@ spec:
     - name: dockerfile
       type: string
       default: apps/test-cicd-app/Dockerfile
+    - name: trivy-severity
+      type: string
+      default: CRITICAL
   workspaces:
     - name: shared-workspace
   tasks:
@@ -195,6 +240,8 @@ spec:
       params:
         - name: image
           value: $(params.image)
+        - name: severity
+          value: $(params.trivy-severity)
     - name: sign
       runAfter:
         - trivy
@@ -203,3 +250,5 @@ spec:
       params:
         - name: image
           value: $(params.image)
+        - name: digest
+          value: $(tasks.build.results.image-digest)
