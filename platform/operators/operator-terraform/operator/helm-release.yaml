@@ -29,8 +29,7 @@ spec:
     logEncoding: console
     logLevel: info
     extraArgs:
-      - name: runner-grpc-max-message-size
-        value: "20"
+      - --runner-grpc-max-message-size=20
     runner:
       image:
         pullPolicy: IfNotPresent
