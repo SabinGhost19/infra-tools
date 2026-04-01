@@ -13,8 +13,11 @@ spec:
     namespace: flux-system
   path: ./platform/platform/platform-ci-cd-zero-trust/harbor/terraform
   serviceAccountName: tf-runner
-  writeOutputsToSecret:
-    name: harbor-project-bootstrap-outputs
+  varsFrom:
+  - kind: Secret
+    name: vault-root-token
+    namespace: vault-prod
+  unauthenticated: true
   backendConfig:
     customConfiguration: |
       backend "kubernetes" {

@@ -3,7 +3,7 @@ terraform {
   required_providers {
     harbor = {
       source  = "goharbor/harbor"
-      version = "~> 3.11"
+      version = "3.10.11"
     }
     random = {
       source  = "hashicorp/random"
@@ -16,6 +16,11 @@ terraform {
   }
 }
 
+variable "vault_token" {
+  type      = string
+  sensitive = true
+}
+
 locals {
   harbor_url            = "https://harbor.licenta.local"
   harbor_admin_username = "admin"
@@ -24,7 +29,6 @@ locals {
   harbor_robot_name     = "tekton-push-pull"
 
   vault_addr        = "http://vault-prod.vault-prod.svc.cluster.local:8200"
-  vault_token       = "root"
   secret_mount_path = "secret"
 }
 
@@ -37,7 +41,7 @@ provider "harbor" {
 
 provider "vault" {
   address = local.vault_addr
-  token   = local.vault_token
+  token   = var.vault_token
 }
 
 resource "random_password" "harbor_robot_secret" {
