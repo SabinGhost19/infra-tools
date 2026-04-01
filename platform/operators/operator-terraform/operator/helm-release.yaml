@@ -7,13 +7,15 @@ spec:
   interval: 10m0s
   chart:
     spec:
-      chart: tf-controller
-      version: "0.11.0"
+      chart: tofu-controller
+      version: "0.16.2"
       sourceRef:
         kind: HelmRepository
         name: tf-controller
         namespace: flux-system
   values:
+    awsPackage:
+      install: false
     replicaCount: 1
     watchAllNamespaces: true
     logEncoding: console
