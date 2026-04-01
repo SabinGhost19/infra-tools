@@ -35,3 +35,12 @@ path "secret/data/cicd/cosign-pubkey" {
 }
 EOT
 }
+
+resource "vault_policy" "harbor_project_bootstrap_policy" {
+  name   = "harbor-project-bootstrap-policy"
+  policy = <<-EOT
+path "secret/data/cicd/harbor-project-licenta-robot" {
+  capabilities = ["create", "read", "update", "delete"]
+}
+EOT
+}

@@ -27,3 +27,12 @@ resource "vault_kubernetes_auth_backend_role" "tekton_cosign_signer_role" {
   token_policies                   = [vault_policy.cicd_cosign_transit_policy.name]
   token_ttl                        = 3600
 }
+
+resource "vault_kubernetes_auth_backend_role" "harbor_project_bootstrap_role" {
+  backend                          = vault_auth_backend.kubernetes.path
+  role_name                        = "harbor-project-bootstrap-role"
+  bound_service_account_names      = ["tf-runner"]
+  bound_service_account_namespaces = ["harbor"]
+  token_policies                   = [vault_policy.harbor_project_bootstrap_policy.name]
+  token_ttl                        = 3600
+}

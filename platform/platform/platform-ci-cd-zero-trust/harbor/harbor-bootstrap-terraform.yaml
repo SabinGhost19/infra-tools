@@ -6,6 +6,7 @@ metadata:
 spec:
   interval: 10m
   approvePlan: auto
+  alwaysCleanupRunnerPod: true
   destroyResourcesOnDeletion: false
   sourceRef:
     kind: GitRepository
@@ -13,11 +14,8 @@ spec:
     namespace: flux-system
   path: ./platform/platform/platform-ci-cd-zero-trust/harbor/terraform
   serviceAccountName: tf-runner
-  varsFrom:
-  - kind: Secret
-    name: vault-root-token
-    namespace: vault-prod
-  unauthenticated: true
+  writeOutputsToSecret:
+    name: harbor-project-bootstrap-outputs
   backendConfig:
     customConfiguration: |
       backend "kubernetes" {

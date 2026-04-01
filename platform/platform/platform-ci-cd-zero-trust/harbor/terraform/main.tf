@@ -16,11 +16,6 @@ terraform {
   }
 }
 
-variable "vault_token" {
-  type      = string
-  sensitive = true
-}
-
 locals {
   harbor_url            = "https://harbor.licenta.local"
   harbor_admin_username = "admin"
@@ -28,8 +23,10 @@ locals {
   harbor_project_name   = "project-licenta"
   harbor_robot_name     = "tekton-push-pull"
 
-  vault_addr        = "http://vault-prod.vault-prod.svc.cluster.local:8200"
-  secret_mount_path = "secret"
+  vault_addr                 = "http://vault-prod.vault-prod.svc.cluster.local:8200"
+  vault_kubernetes_role      = "harbor-project-bootstrap-role"
+  vault_kubernetes_auth_path = "auth/kubernetes/login"
+  secret_mount_path          = "secret"
 }
 
 provider "harbor" {
@@ -41,7 +38,12 @@ provider "harbor" {
 
 provider "vault" {
   address = local.vault_addr
-  token   = var.vault_token
+  auth_login {
+    path = local.vault_kubernetes_auth_path
+    parameters = {
+      role = local.vault_kubernetes_role
+    }
+  }
 }
 
 resource "random_password" "harbor_robot_secret" {
