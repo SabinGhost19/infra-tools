@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
   - cert-manager-repository.yaml
   - minio-operator-repository.yaml
-  - aquasecurity-repository.yaml
+#  - aquasecurity-repository.yaml
   - bitnami-repository.yaml
   - bitnami-oci-repository.yaml
   - bitnami-postgresql-oci-repository.yaml
