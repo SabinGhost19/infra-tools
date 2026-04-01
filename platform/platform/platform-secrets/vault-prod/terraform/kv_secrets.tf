@@ -47,7 +47,7 @@ resource "vault_kv_secret_v2" "cicd_tekton_dashboard_oidc" {
 # Export the Transit public key to a KV secret so that
 # Kyverno and other consumers can verify cosign signatures
 # without needing direct Transit access.
-data "vault_transit_secret_backend_key" "cosign_pubkey" {
+data "vault_transit_key" "cosign_pubkey" {
   backend    = vault_mount.transit.path
   name       = vault_transit_secret_backend_key.cosign.name
   depends_on = [vault_transit_secret_backend_key.cosign]
@@ -56,9 +56,9 @@ data "vault_transit_secret_backend_key" "cosign_pubkey" {
 resource "vault_kv_secret_v2" "cicd_cosign_pubkey" {
   mount      = vault_mount.kv.path
   name       = "cicd/cosign-pubkey"
-  depends_on = [vault_mount.kv, data.vault_transit_secret_backend_key.cosign_pubkey]
+  depends_on = [vault_mount.kv, data.vault_transit_key.cosign_pubkey]
 
   data_json = jsonencode({
-    "cosign.pub" = data.vault_transit_secret_backend_key.cosign_pubkey.keys["1"].public_key
+    "cosign.pub" = data.vault_transit_key.cosign_pubkey.keys["1"].public_key
   })
 }
