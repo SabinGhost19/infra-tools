@@ -62,7 +62,6 @@ data:
 
     spire-agent:
       enabled: true
-      socketPath: /run/spire/agent-sockets/spire-agent.sock
       healthChecks:
         enabled: true
       resources:
