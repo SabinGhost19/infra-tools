@@ -10,7 +10,7 @@
 # Store the root token for Terraform use.
 locals {
   vault_addr           = "http://vault-prod.vault-prod.svc.cluster.local:8200"
-  vault_token          = "root"
+  vault_token          = "" # Token supplied via TF_VAR_vault_token from k8s secret
   secret_mount_path    = "secret"
   kubernetes_auth_path = "kubernetes"
   transit_mount_path   = "transit"

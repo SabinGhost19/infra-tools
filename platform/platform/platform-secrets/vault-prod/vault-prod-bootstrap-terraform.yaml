@@ -15,6 +15,9 @@ spec:
   serviceAccountName: tf-runner
   writeOutputsToSecret:
     name: vault-prod-bootstrap-outputs
+  varsFrom:
+    - kind: Secret
+      name: vault-root-token
   backendConfig:
     customConfiguration: |
       backend "kubernetes" {
