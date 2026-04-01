@@ -11,4 +11,3 @@ resources:
   - tf-runner-auth-delegator-clusterrolebinding.yaml
   - external-secrets-auth-delegator-clusterrolebinding.yaml
   - vault-prod-bootstrap-terraform.yaml
-  - clustersecretstore-vault-prod.yaml

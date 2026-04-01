@@ -27,4 +27,4 @@ spec:
       scanJobTimeout: 15m
       metricsVulnIdEnabled: true
     serviceMonitor:
-      enabled: true
+      enabled: false

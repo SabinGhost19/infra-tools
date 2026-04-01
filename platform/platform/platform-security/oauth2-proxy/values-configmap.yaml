@@ -7,22 +7,8 @@ data:
   values.yaml: |
     replicaCount: 1
 
-    extraEnv:
-      - name: OAUTH2_PROXY_CLIENT_ID
-        valueFrom:
-          secretKeyRef:
-            name: oauth2-proxy-creds
-            key: OAUTH2_PROXY_CLIENT_ID
-      - name: OAUTH2_PROXY_CLIENT_SECRET
-        valueFrom:
-          secretKeyRef:
-            name: oauth2-proxy-creds
-            key: OAUTH2_PROXY_CLIENT_SECRET
-      - name: OAUTH2_PROXY_COOKIE_SECRET
-        valueFrom:
-          secretKeyRef:
-            name: oauth2-proxy-creds
-            key: OAUTH2_PROXY_COOKIE_SECRET
+    config:
+      existingSecret: oauth2-proxy-creds
 
     extraArgs:
       provider: keycloak-oidc

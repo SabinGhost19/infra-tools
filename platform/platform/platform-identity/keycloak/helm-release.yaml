@@ -5,6 +5,13 @@ metadata:
   namespace: platform-identity
 spec:
   interval: 10m0s
+  timeout: 15m0s
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
   chart:
     spec:
       chart: keycloak

@@ -19,6 +19,6 @@ resources:
   - hashicorp-repository.yaml
   - external-secrets-repository.yaml
   - tf-controller-repository.yaml
-  - metallb-repository.yaml
+#  - metallb-repository.yaml
   - ingress-nginx-repository.yaml
   - prometheus-community-repository.yaml
