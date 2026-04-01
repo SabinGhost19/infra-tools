@@ -25,6 +25,7 @@ spec:
       install: false
     replicaCount: 1
     watchAllNamespaces: true
+    allowCrossNamespaceRefs: true
     logEncoding: console
     logLevel: info
     runner:
