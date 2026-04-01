@@ -18,13 +18,14 @@ spec:
     ui:
       enabled: true
     server:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution: []
       dev:
         enabled: false
       ha:
         enabled: true
         replicas: 3
-        # Disable strict anti-affinity to allow scheduling 3 pods on 2 nodes
-        affinity: ""
         raft:
           enabled: true
           setNodeId: true
