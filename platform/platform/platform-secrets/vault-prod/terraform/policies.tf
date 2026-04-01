@@ -43,6 +43,10 @@ path "secret/data/cicd/harbor-project-licenta-robot" {
   capabilities = ["create", "read", "update", "delete"]
 }
 
+path "secret/metadata/cicd/harbor-project-licenta-robot" {
+  capabilities = ["list", "read", "create", "update", "delete"]
+}
+
 path "auth/token/create" {
   capabilities = ["update"]
 }
