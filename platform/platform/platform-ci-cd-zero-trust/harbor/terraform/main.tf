@@ -42,6 +42,7 @@ provider "vault" {
     path = local.vault_kubernetes_auth_path
     parameters = {
       role = local.vault_kubernetes_role
+      jwt  = file("/var/run/secrets/kubernetes.io/serviceaccount/token")
     }
   }
 }
