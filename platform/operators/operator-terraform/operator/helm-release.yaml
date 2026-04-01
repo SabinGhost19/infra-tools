@@ -29,5 +29,6 @@ spec:
     logEncoding: console
     logLevel: info
     runner:
+      grpcMaxMessageSize: 20
       image:
         pullPolicy: IfNotPresent
