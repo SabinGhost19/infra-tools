@@ -28,7 +28,9 @@ spec:
     allowCrossNamespaceRefs: true
     logEncoding: console
     logLevel: info
+    extraArgs:
+      - name: runner-grpc-max-message-size
+        value: "20"
     runner:
-      grpcMaxMessageSize: 20
       image:
         pullPolicy: IfNotPresent
