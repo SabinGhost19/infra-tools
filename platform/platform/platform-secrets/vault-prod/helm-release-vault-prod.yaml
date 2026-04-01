@@ -13,6 +13,8 @@ spec:
         name: hashicorp
         namespace: flux-system
   values:
+    injector:
+      enabled: false
     ui:
       enabled: true
     server:
@@ -33,6 +35,15 @@ spec:
             }
             storage "raft" {
               path = "/vault/data"
+              retry_join {
+                leader_api_addr = "http://vault-prod-0.vault-prod-internal:8200"
+              }
+              retry_join {
+                leader_api_addr = "http://vault-prod-1.vault-prod-internal:8200"
+              }
+              retry_join {
+                leader_api_addr = "http://vault-prod-2.vault-prod-internal:8200"
+              }
             }
             service_registration "kubernetes" {}
       dataStorage:

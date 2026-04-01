@@ -25,5 +25,13 @@ path "transit/verify/cosign" {
 path "transit/keys/cosign" {
   capabilities = ["read"]
 }
+
+path "secret/data/cicd/cosign-transit" {
+  capabilities = ["read"]
+}
+
+path "secret/data/cicd/cosign-pubkey" {
+  capabilities = ["read"]
+}
 EOT
 }

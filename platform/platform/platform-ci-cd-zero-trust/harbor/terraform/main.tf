@@ -23,7 +23,7 @@ locals {
   harbor_project_name   = "project-licenta"
   harbor_robot_name     = "tekton-push-pull"
 
-  vault_addr        = "http://vault.vault.svc.cluster.local:8200"
+  vault_addr        = "http://vault-prod.vault-prod.svc.cluster.local:8200"
   vault_token       = "root"
   secret_mount_path = "secret"
 }
