@@ -42,5 +42,9 @@ resource "vault_policy" "harbor_project_bootstrap_policy" {
 path "secret/data/cicd/harbor-project-licenta-robot" {
   capabilities = ["create", "read", "update", "delete"]
 }
+
+path "auth/token/create" {
+  capabilities = ["update"]
+}
 EOT
 }
