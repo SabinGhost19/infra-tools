@@ -33,7 +33,7 @@ spec:
         - /etc/falco/rules.d
       http_output:
         enabled: true
-        url: http://falcosidekick.falco-sidekick:2801/
+        url: http://falcosight-backend.falcosight.svc.cluster.local:8080/api/webhook/falco
         user_agent: falcosecurity/falco
     customRules:
       custom-rules.yaml: |-
