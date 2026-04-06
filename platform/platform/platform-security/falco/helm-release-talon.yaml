@@ -16,7 +16,7 @@ spec:
     config:
       notifiers:
         webhook:
-          url: http://falcosight-backend.falcosight.svc.cluster.local:8080/api/webhook/talon
+          url: http://falcosight-backend.falcosight.svc.cluster.local:3000/api/webhook/talon
       rules:
         - name: reverse-shell-prod
           notifiers: [webhook]
