@@ -6,7 +6,6 @@ metadata:
 spec:
   interval: 10m
   approvePlan: auto
-  alwaysCleanupRunnerPod: true
   destroyResourcesOnDeletion: false
   sourceRef:
     kind: GitRepository

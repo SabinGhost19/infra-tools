@@ -167,22 +167,24 @@ spec:
         - --yes
         - --allow-insecure-registry
         - --key
-        - hashivault://cosign
+        - /var/run/secrets/tekton/cosign/cosign.key
         - $(params.image)@$(params.digest)
       env:
-        - name: VAULT_ADDR
+        - name: COSIGN_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: cosign-transit-creds
-              key: VAULT_ADDR
-        - name: VAULT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: cosign-transit-creds
-              key: VAULT_TOKEN
+              name: cosign-keypair
+              key: cosign.password
         - name: DOCKER_CONFIG
           value: /tekton/home/.docker
+      volumeMounts:
+        - name: cosign-keypair
+          mountPath: /var/run/secrets/tekton/cosign
+          readOnly: true
   volumes:
+    - name: cosign-keypair
+      secret:
+        secretName: cosign-keypair
     - name: harbor-credentials
       secret:
         secretName: harbor-robot-credentials

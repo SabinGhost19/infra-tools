@@ -4,6 +4,9 @@ metadata:
   name: falco-talon
   namespace: falco-talon
 spec:
+  dependsOn:
+    - name: falcosidekick
+      namespace: falco-sidekick
   interval: 10m0s
   chart:
     spec:
@@ -14,12 +17,8 @@ spec:
         namespace: flux-system
   values:
     config:
-      notifiers:
-        webhook:
-          url: http://falcosight-backend.falcosight.svc.cluster.local:3000/api/webhook/talon
       rules:
         - name: reverse-shell-prod
-          notifiers: [webhook]
           match:
             rule: Reverse Shell Connect
             output_fields:
@@ -35,7 +34,6 @@ spec:
                 namespace: prod
                 policyName: default-deny
         - name: shadow-file-prod
-          notifiers: [webhook]
           match:
             rule: Read Shadow File
             output_fields:
@@ -45,8 +43,7 @@ spec:
               type: log
               parameters:
                 message: "CRITICAL: Shadow file accessed in prod namespace"
-        - notifiers: [webhook]
-          name: network-tool-in-prod
+        - name: network-tool-in-prod
           match:
             rule: Curl or Wget in Container
             output_fields:
@@ -56,8 +53,7 @@ spec:
               type: log
               parameters:
                 message: "WARNING: Network tool detected in prod - manual review required"
-        - notifiers: [webhook]
-          name: bash-exec-prod
+        - name: bash-exec-prod
           match:
             rule: Exec Shell Bash
             output_fields:

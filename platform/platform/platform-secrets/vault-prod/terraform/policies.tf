@@ -25,30 +25,5 @@ path "transit/verify/cosign" {
 path "transit/keys/cosign" {
   capabilities = ["read"]
 }
-
-path "secret/data/cicd/cosign-transit" {
-  capabilities = ["read"]
-}
-
-path "secret/data/cicd/cosign-pubkey" {
-  capabilities = ["read"]
-}
-EOT
-}
-
-resource "vault_policy" "harbor_project_bootstrap_policy" {
-  name   = "harbor-project-bootstrap-policy"
-  policy = <<-EOT
-path "secret/data/cicd/harbor-project-licenta-robot" {
-  capabilities = ["create", "read", "update", "delete"]
-}
-
-path "secret/metadata/cicd/harbor-project-licenta-robot" {
-  capabilities = ["list", "read", "create", "update", "delete"]
-}
-
-path "auth/token/create" {
-  capabilities = ["update"]
-}
 EOT
 }

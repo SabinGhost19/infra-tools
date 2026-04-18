@@ -6,5 +6,6 @@ resources:
   - workspace/legacy/workspace-pvc.yaml
   - identity/externalsecrets.yaml
   - identity/spire-clusterspiffeid.yaml
+  - runtime/peer-authentication.yaml
   - ci-cd/pipeline/tekton-pipeline.yaml
   - ci-cd/triggers/tekton-trigger.yaml

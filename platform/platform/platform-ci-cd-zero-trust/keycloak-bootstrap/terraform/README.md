@@ -44,3 +44,17 @@ This Terraform module manages OIDC clients for the ZeroTrust-Realm in Keycloak.
   - Add conditional forwarding/stub-domain from cluster DNS (CoreDNS) for `licenta.local` to FreeIPA.
   - Temporary fallback for lab environments: static host mapping for Keycloak runtime (hostAliases or node-level `/etc/hosts`).
 - Avoid replacing `ldaps://ipa.licenta.local:636` with an IP URL unless certificate SANs explicitly include that IP.
+
+## Troubleshooting: provider download fails in tf-runner
+
+If runner logs show errors similar to:
+
+- `Failed to install provider`
+- `GET https://github.com/keycloak/terraform-provider-keycloak/releases/...`
+
+then the runner pod cannot reach GitHub release assets.
+
+Recommended actions:
+
+1. Ensure outbound egress from namespace `platform-identity` to `github.com` and release/CDN endpoints.
+2. Reconcile the Terraform object after egress is fixed.

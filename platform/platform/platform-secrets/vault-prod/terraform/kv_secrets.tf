@@ -1,7 +1,6 @@
 resource "vault_kv_secret_v2" "demo_api_config" {
-  mount      = vault_mount.kv.path
-  name       = "prod/demo-api/config"
-  depends_on = [vault_mount.kv]
+  mount = local.secret_mount_path
+  name  = "prod/demo-api/config"
 
   data_json = jsonencode({
     username = "demo_user"
@@ -10,9 +9,8 @@ resource "vault_kv_secret_v2" "demo_api_config" {
 }
 
 resource "vault_kv_secret_v2" "cicd_cosign_transit" {
-  mount      = vault_mount.kv.path
-  name       = "cicd/cosign-transit"
-  depends_on = [vault_mount.kv, vault_transit_secret_backend_key.cosign]
+  mount = local.secret_mount_path
+  name  = "cicd/cosign-transit"
 
   data_json = jsonencode({
     VAULT_ADDR     = local.vault_addr
@@ -22,9 +20,8 @@ resource "vault_kv_secret_v2" "cicd_cosign_transit" {
 }
 
 resource "vault_kv_secret_v2" "cicd_harbor_robot" {
-  mount      = vault_mount.kv.path
-  name       = "cicd/harbor-robot"
-  depends_on = [vault_mount.kv]
+  mount = local.secret_mount_path
+  name  = "cicd/harbor-robot"
 
   data_json = jsonencode({
     username = "harbor-registry-robot"
@@ -33,23 +30,12 @@ resource "vault_kv_secret_v2" "cicd_harbor_robot" {
 }
 
 resource "vault_kv_secret_v2" "cicd_tekton_dashboard_oidc" {
-  mount      = vault_mount.kv.path
-  name       = "cicd/tekton-dashboard-oidc"
-  depends_on = [vault_mount.kv]
+  mount = local.secret_mount_path
+  name  = "cicd/tekton-dashboard-oidc"
 
   data_json = jsonencode({
     client_id     = "tekton-dashboard-oidc"
     client_secret = "TektonOIDCSecret-2026-Demo"
     cookie_secret = "TektonCookieSecret-2026-Demo-1234567890"
-  })
-}
-
-resource "vault_kv_secret_v2" "cicd_cosign_pubkey" {
-  mount      = vault_mount.kv.path
-  name       = "cicd/cosign-pubkey"
-  depends_on = [vault_mount.kv]
-
-  data_json = jsonencode({
-    "cosign.pub" = vault_transit_secret_backend_key.cosign.keys[0].public_key
   })
 }

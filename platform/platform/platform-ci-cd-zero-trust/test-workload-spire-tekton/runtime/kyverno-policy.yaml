@@ -16,7 +16,7 @@ spec:
       context:
         - name: cosignPubKey
           apiCall:
-            urlPath: /api/v1/namespaces/test-workload-spire-tekton/secrets/cosign-pubkey
+            urlPath: /api/v1/namespaces/test-workload-spire-tekton/secrets/cosign-keypair
             jmesPath: 'data."cosign.pub" | base64_decode(@)'
       verifyImages:
         - imageReferences:

@@ -3,7 +3,7 @@ terraform {
   required_providers {
     harbor = {
       source  = "goharbor/harbor"
-      version = "3.10.11"
+      version = "~> 3.11"
     }
     random = {
       source  = "hashicorp/random"
@@ -23,10 +23,9 @@ locals {
   harbor_project_name   = "project-licenta"
   harbor_robot_name     = "tekton-push-pull"
 
-  vault_addr                 = "http://vault-prod.vault-prod.svc.cluster.local:8200"
-  vault_kubernetes_role      = "harbor-project-bootstrap-role"
-  vault_kubernetes_auth_path = "auth/kubernetes/login"
-  secret_mount_path          = "secret"
+  vault_addr        = "http://vault.vault.svc.cluster.local:8200"
+  vault_token       = "root"
+  secret_mount_path = "secret"
 }
 
 provider "harbor" {
@@ -38,13 +37,7 @@ provider "harbor" {
 
 provider "vault" {
   address = local.vault_addr
-  auth_login {
-    path = local.vault_kubernetes_auth_path
-    parameters = {
-      role = local.vault_kubernetes_role
-      jwt  = file("/var/run/secrets/kubernetes.io/serviceaccount/token")
-    }
-  }
+  token   = local.vault_token
 }
 
 resource "random_password" "harbor_robot_secret" {

@@ -6,6 +6,9 @@ metadata:
 spec:
   interval: 10m
   approvePlan: auto
+  retryInterval: 2m
+  remediation:
+    retries: 8
   destroyResourcesOnDeletion: false
   sourceRef:
     kind: GitRepository
