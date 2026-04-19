@@ -52,6 +52,9 @@ spec:
 
               vault auth list -format=json | grep -q '"kubernetes/"' || vault auth enable kubernetes
 
+              vault secrets list -format=json | grep -q '"transit/"' || vault secrets enable transit
+              vault read transit/keys/autounseal >/dev/null 2>&1 || vault write -f transit/keys/autounseal
+
               vault write auth/kubernetes/config \
                 kubernetes_host="https://kubernetes.default.svc" \
                 token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
