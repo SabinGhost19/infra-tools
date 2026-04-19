@@ -6,5 +6,3 @@ resources:
   - helm-release-external-secrets.yaml
   - external-secrets-auth-delegator-clusterrolebinding.yaml
   - vault-bootstrap-job.yaml
-  - clustersecretstore-vault-backend.yaml
-  - externalsecret-demo-api-db-secret.yaml
