@@ -12,7 +12,7 @@ locals {
   ldap_connection_url       = "ldaps://ipa.licenta.local:636"
   ldap_users_dn             = "cn=users,cn=accounts,dc=licenta,dc=local"
   ldap_bind_dn              = "uid=keycloak-svc,cn=users,cn=accounts,dc=licenta,dc=local"
-  ldap_bind_password        = "ParolaSetaInAnsible123!"
+  ldap_bind_password        = "adminpass123"
   ldap_groups_dn            = "cn=groups,cn=accounts,dc=licenta,dc=local"
   ldap_user_object_classes  = ["person", "organizationalperson", "inetorgperson"]
   ldap_group_object_classes = ["groupofnames"]

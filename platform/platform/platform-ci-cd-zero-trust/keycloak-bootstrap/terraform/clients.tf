@@ -40,15 +40,20 @@ resource "keycloak_openid_client" "jit_backend" {
   client_secret                = local.jit_backend_client_secret
 }
 
-data "keycloak_role" "realm_management_manage_users" {
+data "keycloak_openid_client" "realm_management" {
   realm_id  = data.keycloak_realm.zt.id
   client_id = "realm-management"
+}
+
+data "keycloak_role" "realm_management_manage_users" {
+  realm_id  = data.keycloak_realm.zt.id
+  client_id = data.keycloak_openid_client.realm_management.id
   name      = "manage-users"
 }
 
 resource "keycloak_openid_client_service_account_role" "jit_backend_manage_users" {
   realm_id                = data.keycloak_realm.zt.id
   service_account_user_id = keycloak_openid_client.jit_backend.service_account_user_id
-  client_id               = "realm-management"
+  client_id               = data.keycloak_openid_client.realm_management.id
   role                    = data.keycloak_role.realm_management_manage_users.name
 }

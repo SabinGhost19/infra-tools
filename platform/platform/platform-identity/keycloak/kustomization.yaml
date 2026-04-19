@@ -4,5 +4,6 @@ resources:
   - namespace.yaml
   - keycloak-admin-secret.yaml
   - keycloak-postgres-secret.yaml
+  - keycloak-freeipa-ca-secret.yaml
   - values-configmap.yaml
   - helm-release.yaml

@@ -17,6 +17,20 @@ data:
       proxyHeaders: xforwarded
       production: true
       httpRelativePath: /
+      extraEnvVars:
+        - name: KC_TRUSTSTORE_PATHS
+          value: /opt/keycloak/conf/truststores/freeipa/ca.crt
+      extraVolumes:
+        - name: keycloak-freeipa-ca
+          secret:
+            secretName: keycloak-freeipa-ca
+            items:
+              - key: ca.crt
+                path: ca.crt
+      extraVolumeMounts:
+        - name: keycloak-freeipa-ca
+          mountPath: /opt/keycloak/conf/truststores/freeipa
+          readOnly: true
 
     ingress:
       enabled: true
