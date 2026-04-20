@@ -24,6 +24,9 @@ data:
     extraEnvVars:
       - name: KC_TRUSTSTORE_PATHS
         value: /opt/keycloak/conf/truststores/freeipa/ca.crt
+    extraEnv:
+      - name: KC_TRUSTSTORE_PATHS
+        value: /opt/keycloak/conf/truststores/freeipa/ca.crt
     extraVolumes:
       - name: keycloak-freeipa-ca
         secret:

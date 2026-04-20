@@ -15,7 +15,6 @@ data:
       oidc-issuer-url: http://keycloak.licenta.ro/realms/ZeroTrust-Realm
       email-domain: "*"
       scope: openid profile email groups
-      allowed-group: SG_PlatformEngineers
       cookie-secure: "false"
       cookie-httponly: "true"
       cookie-samesite: lax
@@ -24,6 +23,7 @@ data:
       set-authorization-header: "false"
       pass-access-token: "false"
       pass-user-headers: "true"
+      pass-authorization-header: "true"
       reverse-proxy: "true"
       skip-provider-button: "true"
 
