@@ -18,7 +18,7 @@ data:
       cookie-secure: "false"
       cookie-httponly: "true"
       cookie-samesite: lax
-      session-cookie-minimal: "true"
+      session-cookie-minimal: "false"
       set-xauthrequest: "true"
       set-authorization-header: "false"
       pass-access-token: "false"
